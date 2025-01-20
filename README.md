@@ -6,4 +6,3 @@ wish to design their own drafts.
 The live version of this can be found at:
 
 http://bazzalisk.org/tabletweave/
-

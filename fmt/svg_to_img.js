@@ -2,10 +2,10 @@
 
 function svg_to_blob(svg) {
     var data = (new XMLSerializer()).serializeToString(svg);
-    if(navigator. userAgent. indexOf('AppleWebKit') != -1){
-        return new Blob([data], {type: "image/svg+xml"});
+    if (navigator.userAgent.indexOf('AppleWebKit') != -1) {
+        return new Blob([data], { type: "image/svg+xml" });
     } else {
-        return new Blob([data], {type: "image/svg+xml;charset=utf-8"});
+        return new Blob([data], { type: "image/svg+xml;charset=utf-8" });
     }
 }
 
@@ -17,7 +17,7 @@ function svg_to_url(svg) {
 function draw_svg_to_canvas(
     svg,
     canvas,
-    onload=function() {}
+    onload = function () { }
 ) {
     var ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -35,8 +35,8 @@ function draw_svg_to_canvas(
 function svg_to_img(
     svg,
     mimetype,
-    width=1920,
-    onload=function(url) {}
+    width = 1920,
+    onload = function (url) { }
 ) {
     var canvas = document.createElement("canvas");
     canvas.width = width;
@@ -49,8 +49,8 @@ function svg_to_img(
 function svg_to_img_blob(
     svg,
     mimetype,
-    width=1920,
-    onload=function(blob) {}
+    width = 1920,
+    onload = function (blob) { }
 ) {
     var canvas = document.createElement("canvas");
     canvas.width = width;

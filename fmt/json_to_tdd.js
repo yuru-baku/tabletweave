@@ -2,14 +2,14 @@
   This script provides a function that transforms the old json format into the new .tdd format
   */
 
-const colorids = [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' ];
+const colorids = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'];
 
 function json_to_tdd(json) {
   var r = new TDDDraft();
 
   if (json['lower_cells'].length < 1) {
     /* This is a fall back for impossible values */
-    r.threading = [ 'Z' ];
+    r.threading = ['Z'];
     r.threadingColours = [['0']];
   } else {
     /* This decodes the old json threading diagram to make the new one */
@@ -60,7 +60,7 @@ function json_to_tdd(json) {
     var dir = (r.threading[x] == 'Z') ? '\\' : '/';;
     for (var y = r.turning.length - 1; y >= 0; y--) {
       if (json.main_cells[y][x]) {
-        dir = (dir == '\\')?'/':'\\';
+        dir = (dir == '\\') ? '/' : '\\';
       }
       r.turning[y][x] = dir;
     }

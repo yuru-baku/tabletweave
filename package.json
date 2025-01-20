@@ -1,0 +1,17 @@
+{
+  "name": "tabletweave",
+  "version": "1.0.0",
+  "description": "This is a simple javascript based application intended to help practictioners of the ancient art of tablet weaving who\r wish to design their own drafts.",
+  "main": "draft.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "prettier": "^3.4.2"
+  }
+}

@@ -14,7 +14,7 @@
 		// Node/CommonJS
 		try {
 			jQuery = require('jquery');
-		} catch(e) {}
+		} catch (e) { }
 		module.exports = factory(jQuery);
 	} else {
 		// Browser globals
@@ -48,7 +48,7 @@
 			// If we can't parse the cookie, ignore it, it's unusable.
 			s = decodeURIComponent(s.replace(pluses, ' '));
 			return api.json ? JSON.parse(s) : s;
-		} catch(e) {}
+		} catch (e) { }
 	}
 
 	function read(s, converter) {
@@ -61,7 +61,7 @@
 		var i = 0;
 		var result = {};
 		for (; i < arguments.length; i++) {
-			options = arguments[ i ];
+			options = arguments[i];
 			for (key in options) {
 				result[key] = options[key];
 			}
@@ -88,9 +88,9 @@
 			return (document.cookie = [
 				encode(key), '=', stringifyCookieValue(value),
 				options.expires ? '; expires=' + options.expires.toUTCString() : '', // use expires attribute, max-age is not supported by IE
-				options.path    ? '; path=' + options.path : '',
-				options.domain  ? '; domain=' + options.domain : '',
-				options.secure  ? '; secure' : ''
+				options.path ? '; path=' + options.path : '',
+				options.domain ? '; domain=' + options.domain : '',
+				options.secure ? '; secure' : ''
 			].join(''));
 		}
 
@@ -133,7 +133,7 @@
 		return !api(key);
 	};
 
-	if ( $ ) {
+	if ($) {
 		$.cookie = api;
 		$.removeCookie = api.remove;
 	}

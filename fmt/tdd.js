@@ -4,7 +4,7 @@
 
 class TDDDraft {
   constructor() {
-    this.name   = "untitled draft";
+    this.name = "untitled draft";
     this.resetPalette();
     this.threadingColours = [
       ['1'],
@@ -77,7 +77,7 @@ class TDDDraft {
 
   addPicks(num) {
     var i;
-    for (i=0; i < num; i++) {
+    for (i = 0; i < num; i++) {
       var arr = this.turning[0].slice();
       this.turning.unshift(arr);
     }
@@ -90,7 +90,7 @@ class TDDDraft {
   addHoles(num) {
     var n = Math.min(num, 8 - this.holes());
     var i;
-    for (i=0; i < n; i++) {
+    for (i = 0; i < n; i++) {
       var arr = this.threadingColours[this.holes() - 1].slice();
       this.threadingColours.push(arr);
     }
@@ -104,16 +104,16 @@ class TDDDraft {
     var i;
     var j;
 
-    for (i=0; i < this.picks(); i++) {
-      for (var j=0; j < num; j++) {
+    for (i = 0; i < this.picks(); i++) {
+      for (var j = 0; j < num; j++) {
         this.turning[i].push(this.turning[i][this.turning[i].length - 1]);
       }
     }
 
-    for (j=0; j < num; j++) {
+    for (j = 0; j < num; j++) {
       this.threading.push(this.threading[this.threading.length - 1]);
 
-      for (i=0; i < this.threadingColours.length; i++) {
+      for (i = 0; i < this.threadingColours.length; i++) {
         var elem = this.threadingColours[i][this.threadingColours[i].length - 1];
         this.threadingColours[i].push(elem);
       }
@@ -122,10 +122,10 @@ class TDDDraft {
 
   removeTabletsRight(num) {
     var i;
-    for (i=0; i < this.picks(); i++) {
+    for (i = 0; i < this.picks(); i++) {
       this.turning[i] = this.turning[i].slice(0, Math.max(this.turning[i].length - num, 1));
     }
-    for (i=0; i < this.holes(); i++) {
+    for (i = 0; i < this.holes(); i++) {
       this.threadingColours[i] = this.threadingColours[i].slice(0, Math.max(this.threadingColours[i].length - num, 1));
     }
     this.threading = this.threading.slice(0, Math.max(this.threading.length - num, 1));
@@ -135,16 +135,16 @@ class TDDDraft {
     var i;
     var j;
 
-    for (i=0; i < this.picks(); i++) {
-      for (var j=0; j < num; j++) {
+    for (i = 0; i < this.picks(); i++) {
+      for (var j = 0; j < num; j++) {
         this.turning[i].unshift(this.turning[i][0]);
       }
     }
 
-    for (j=0; j < num; j++) {
+    for (j = 0; j < num; j++) {
       this.threading.unshift(this.threading[0]);
 
-      for (i=0; i < this.threadingColours.length; i++) {
+      for (i = 0; i < this.threadingColours.length; i++) {
         this.threadingColours[i].unshift(this.threadingColours[i][0]);
       }
     }
@@ -152,10 +152,10 @@ class TDDDraft {
 
   removeTabletsLeft(num) {
     var i;
-    for (i=0; i < this.picks(); i++) {
+    for (i = 0; i < this.picks(); i++) {
       this.turning[i] = this.turning[i].slice(Math.min(num, this.turning[i].length - 1), this.turning[i].length);
     }
-    for (i=0; i < this.holes(); i++) {
+    for (i = 0; i < this.holes(); i++) {
       this.threadingColours[i] = this.threadingColours[i].slice(Math.min(num, this.threadingColours[i].length - 1), this.threadingColours[i].length);
     }
     this.threading = this.threading.slice(Math.min(num, this.threading.length - 1), this.threading.length);
@@ -185,7 +185,7 @@ class TDDDraft {
 
   reverse(tablet, pick) {
     var i;
-    for (i=0; i < this.picks() - pick; i++) {
+    for (i = 0; i < this.picks() - pick; i++) {
       var a = this.turning[i][tablet];
       if (a == '\\') {
         this.turning[i][tablet] = '/';
@@ -274,14 +274,14 @@ class TDDDraft {
     }
 
     if (n >= 1) {
-       desc += '' + n + dir;
+      desc += '' + n + dir;
     }
 
     return desc;
   }
 
-  describeTablet (x, invertsz) {
-    return (((this.threading[x] == "S") != invertsz)?"S":"Z") + " threaded tablet";
+  describeTablet(x, invertsz) {
+    return (((this.threading[x] == "S") != invertsz) ? "S" : "Z") + " threaded tablet";
   }
 
   describeHole(x, y) {
@@ -315,7 +315,7 @@ function TDDDraftFromString(raw) {
 
   // Discard empty lines
   var line = lines.shift();
-  while(line.match(/^(#.*)?\s*$/)) {
+  while (line.match(/^(#.*)?\s*$/)) {
     line = lines.shift();
   }
 
@@ -336,7 +336,7 @@ function TDDDraftFromString(raw) {
 
   // Discard empty lines
   var line = lines.shift();
-  while(line.match(/^(#.*)?$/)) {
+  while (line.match(/^(#.*)?$/)) {
     line = lines.shift();
   }
 
@@ -361,7 +361,7 @@ function TDDDraftFromString(raw) {
 
   // Discard empty lines
   var line = lines.shift();
-  while(line.match(/^(#.*)?\s*$/)) {
+  while (line.match(/^(#.*)?\s*$/)) {
     line = lines.shift();
   }
 
