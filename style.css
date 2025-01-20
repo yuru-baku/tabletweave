@@ -260,7 +260,7 @@ div.controlpanel > div > span > span {
 }
 
 .accordion:after {
-  content: "\02795"; /* Unicode character for "plus" sign (+) */
+  content: '\02795'; /* Unicode character for "plus" sign (+) */
   font-size: 13px;
   color: #777;
   float: right;
@@ -268,7 +268,7 @@ div.controlpanel > div > span > span {
 }
 
 .active:after {
-  content: "\2796"; /* Unicode character for "minus" sign (-) */
+  content: '\2796'; /* Unicode character for "minus" sign (-) */
 }
 
 .switch {
@@ -297,7 +297,7 @@ div.controlpanel > div > span > span {
 }
 
 .slider:before {
-  content: "";
+  content: '';
   position: absolute;
   text-align: center;
   height: 26px;
@@ -324,27 +324,27 @@ input:checked + .slider:before {
 }
 
 #labelholescw + .slider:before {
-  content: "↺";
+  content: '↺';
 }
 
 #labelholescw:checked + .slider:before {
-  content: "↻";
+  content: '↻';
 }
 
 #addright + .slider:before {
-  content: "←";
+  content: '←';
 }
 
 #addright:checked + .slider:before {
-  content: "→";
+  content: '→';
 }
 
 #lockdraft + .slider:before {
-  content: "🔓";
+  content: '🔓';
 }
 
 #lockdraft:checked + .slider:before {
-  content: "🔒";
+  content: '🔒';
 }
 
 #lockdraft + .slider {
@@ -363,9 +363,9 @@ input:checked + .slider:before {
   background-color: #f32121;
 }
 
-label[for="labelholescw"],
-label[for="lockdraft"],
-label[for="addright"] {
+label[for='labelholescw'],
+label[for='lockdraft'],
+label[for='addright'] {
   line-height: 60px;
 }
 
