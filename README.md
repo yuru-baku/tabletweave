@@ -8,7 +8,7 @@ http://bazzalisk.org/tabletweave/
 
 # Todos:
 
-- [x] Convert TS
+- [ ] Convert TS
 - [ ] Update Style
 - [ ] Use Node
 - [ ] Auto Format
