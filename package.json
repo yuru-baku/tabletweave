@@ -12,6 +12,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "fmt": "^2.0.0",
+    "i18next": "^24.2.1",
+    "i18next-http-backend": "^3.0.1",
+    "i18next-xhr-backend": "^3.2.2",
+    "jquery-i18next": "^1.2.1",
+    "ntc": "^0.0.1",
     "prettier": "^3.4.2"
   }
 }
