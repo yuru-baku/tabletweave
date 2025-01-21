@@ -1,28 +1,36 @@
-@charset "UTF-8";
+@import 'colors.scss';
+
+$background-color: hsv(42, 2%, 100%);
+$text-color: black;
+$text-background-color: white;
+$text-border-color: black;
+$control_background: #eee;
+$active_highlight: #ccc;
+$border: 1px solid black;
+$border-radius: 5px;
+
 body {
   display: flex;
   flex-direction: column;
-  background-color: hsv(42, 2%, 100%);
-  color: black;
+  background-color: $background-color;
+  color: $text-color;
 }
 
 header {
   flex: 1;
   gap: 1em;
 }
-
 main {
   flex: 1;
   display: flex;
   flex-direction: row;
   gap: 1em;
+  section {
+    flex-direction: column;
+    width: fit-content;
+    gap: 1em;
+  }
 }
-main section {
-  flex-direction: column;
-  width: fit-content;
-  gap: 1em;
-}
-
 footer {
   gap: 1em;
   flex: 1;
@@ -58,9 +66,9 @@ h4 {
   position: absolute;
   left: 400px;
   top: 200px;
-  background-color: white;
-  border: 1px solid black;
-  border-radius: 5px;
+  background-color: $text-background-color;
+  border: $border;
+  border-radius: $border-radius;
   padding: 5px 5px 5px;
 }
 
@@ -71,30 +79,34 @@ h4 {
 .controlbar {
   width: 350px;
   bottom: 28px;
-  border: 1px solid black;
-  border-radius: 5px;
+  border: $border;
+  border-radius: $border-radius;
   overflow-y: scroll;
-  background-color: #eee;
-}
-.controlbar div {
-  width: 100%;
-  display: inline-block;
-  background-color: #eee;
-}
-.controlbar controlpanel > div {
-  display: table;
-  width: 95%;
-  margin: auto;
-}
-.controlbar controlpanel > div > span {
-  display: table-row;
-}
-.controlbar controlpanel > div > span > label {
-  display: table-cell;
-}
-.controlbar controlpanel > div > span > span {
-  display: table-cell;
-  white-space: nowrap;
+  background-color: $control_background;
+  div {
+    width: 100%;
+    display: inline-block;
+    background-color: $control_background;
+  }
+
+  controlpanel > div {
+    display: table;
+    width: 95%;
+    margin: auto;
+  }
+
+  controlpanel > div > span {
+    display: table-row;
+  }
+
+  controlpanel > div > span > label {
+    display: table-cell;
+  }
+
+  controlpanel > div > span > span {
+    display: table-cell;
+    white-space: nowrap;
+  }
 }
 
 .instructionlink {
@@ -115,14 +127,14 @@ h4 {
 }
 
 .draftcanvas {
-  border: 1px solid black;
-  border-radius: 5px;
+  border: $border;
+  border-radius: $border-radius;
   margin-bottom: 30px;
 }
 
 .repeacanvas {
-  border: 1px solid black;
-  border-radius: 5px;
+  border: $border;
+  border-radius: $border-radius;
 }
 
 .readout {
@@ -141,13 +153,14 @@ h4 {
 }
 
 .selected {
-  border: 2px solid black;
+  border: 2px solid $text-border-color;
 }
 
 .copyright {
-  background-color: #eee;
-  border: 1px solid black;
-  border-radius: 5px;
+  background-color: $control_background;
+  border: $border;
+  border-radius: $border-radius;
+
   display: block;
   width: 100%;
   height: 20px;
@@ -179,7 +192,7 @@ h4 {
   font-variant: small-caps;
   font-size: larger;
   /* background-color: #eee; */
-  background-color: #eee;
+  background-color: $control_background;
   color: black;
   /* color: #444; */
   cursor: pointer;
@@ -194,7 +207,7 @@ h4 {
 /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
 .active,
 .accordion:hover {
-  background-color: #ccc;
+  background-color: $active_highlight;
 }
 
 /* Style the accordion panel. Note: hidden by default */
@@ -206,7 +219,7 @@ h4 {
 }
 
 .accordion:after {
-  content: "➕"; /* Unicode character for "plus" sign (+) */
+  content: '\02795'; /* Unicode character for "plus" sign (+) */
   font-size: 13px;
   color: #777;
   float: right;
@@ -214,7 +227,7 @@ h4 {
 }
 
 .active:after {
-  content: "➖"; /* Unicode character for "minus" sign (-) */
+  content: '\2796'; /* Unicode character for "minus" sign (-) */
 }
 
 .switch {
@@ -243,7 +256,7 @@ h4 {
 }
 
 .slider:before {
-  content: "";
+  content: '';
   position: absolute;
   text-align: center;
   height: 26px;
@@ -270,27 +283,27 @@ input:checked + .slider:before {
 }
 
 #labelholescw + .slider:before {
-  content: "↺";
+  content: '↺';
 }
 
 #labelholescw:checked + .slider:before {
-  content: "↻";
+  content: '↻';
 }
 
 #addright + .slider:before {
-  content: "←";
+  content: '←';
 }
 
 #addright:checked + .slider:before {
-  content: "→";
+  content: '→';
 }
 
 #lockdraft + .slider:before {
-  content: "🔓";
+  content: '🔓';
 }
 
 #lockdraft:checked + .slider:before {
-  content: "🔒";
+  content: '🔒';
 }
 
 #lockdraft + .slider {
@@ -309,9 +322,9 @@ input:checked + .slider:before {
   background-color: #f32121;
 }
 
-label[for=labelholescw],
-label[for=lockdraft],
-label[for=addright] {
+label[for='labelholescw'],
+label[for='lockdraft'],
+label[for='addright'] {
   line-height: 60px;
 }
 
@@ -327,5 +340,3 @@ label[for=addright] {
 #GREYSLIDER {
   width: 50%;
 }
-
-/*# sourceMappingURL=style.css.map */

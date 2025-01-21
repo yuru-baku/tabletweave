@@ -59,26 +59,7 @@
       </div>
     </header>
     <main>
-      <div id="mainsection">
-        <div id="draftcanvas" class="draftcanvas"></div>
-      </div>
-
-      <div id="repeatsection">
-        <div id="repeatcanvas" class="draftcanvas"></div>
-      </div>
-
-      <div id="textinstructions">
-        <ul>
-          <li>Threading:</li>
-          <ol id="threadinginstructions"></ol>
-          <li>Turning:</li>
-          <ol id="turninginstructions">
-            T
-          </ol>
-        </ul>
-      </div>
-
-      <div id="controlbar">
+      <section class="controlbar">
         <div class="controlpanel">
           <h3>Draft Name</h3>
           <div>
@@ -293,135 +274,157 @@
               </span>
             </span>
           </div>
-        </div>
 
-        <div id="resets">
-          <button class="accordion">Resets</button>
-          <div class="panel">
-            <span>
-              <button id="reset">Reset All</button>
-              <button id="clear">Clear Patter</button>
-              <button id="resetpallette">Reset Palett</button>
-            </span>
-          </div>
-        </div>
-
-        <div id="palete">
-          <button class="accordion active">Palette</button>
-          <div id="fg" class="panel">
-            <label>Foreground Colour:</label>
-            <table>
-              <tr>
-                <td class="colorbox selected" id="EMPTYBOX">None</td>
-                <td class="colorbox" id="BOX1"></td>
-                <td class="colorbox" id="BOX2"></td>
-                <td class="colorbox" id="BOX3"></td>
-                <td class="colorbox" id="BOX4"></td>
-                <td class="colorbox" id="BOX5"></td>
-                <td class="colorbox" id="BOX6"></td>
-                <td class="colorbox" id="BOX7"></td>
-                <td class="colorbox" id="BOX8"></td>
-                <td class="colorbox" id="BOX9"></td>
-                <td class="colorbox" id="BOX10"></td>
-                <td class="colorbox" id="BOX11"></td>
-                <td class="colorbox" id="BOX12"></td>
-              </tr>
-              <tr>
-                <td class="colornum" id="NUM0"></td>
-                <td class="colornum" id="NUM1"></td>
-                <td class="colornum" id="NUM2"></td>
-                <td class="colornum" id="NUM3"></td>
-                <td class="colornum" id="NUM4"></td>
-                <td class="colornum" id="NUM5"></td>
-                <td class="colornum" id="NUM6"></td>
-                <td class="colornum" id="NUM7"></td>
-                <td class="colornum" id="NUM8"></td>
-                <td class="colornum" id="NUM9"></td>
-                <td class="colornum" id="NUM10"></td>
-                <td class="colornum" id="NUM11"></td>
-                <td class="colornum" id="NUM12"></td>
-              </tr>
-            </table>
-            <label>Colour Name:</label>
-            <label id="colourname"> </label>
-            <div id="coloursliders">
+          <div id="resets">
+            <button class="accordion">Resets</button>
+            <div class="panel">
               <span>
-                <label>Red:</label>
-                <input type="range" min="0" max="255" id="REDSLIDE" value="0" />
-                <input class="readout" id="REDVAL" value="0" />
-              </span>
-
-              <span>
-                <label>Green:</label>
-                <input
-                  type="range"
-                  min="0"
-                  max="255"
-                  id="GREENSLIDE"
-                  value="0" />
-                <input class="readout" id="GREENVAL" value="0" />
-              </span>
-
-              <span>
-                <label>Blue:</label>
-                <input
-                  type="range"
-                  min="0"
-                  max="255"
-                  id="BLUESLIDE"
-                  value="0" />
-                <input class="readout" id="BLUEVAL" value="0" />
+                <button id="reset">Reset All</button>
+                <button id="clear">Clear Patter</button>
+                <button id="resetpallette">Reset Palett</button>
               </span>
             </div>
           </div>
-        </div>
 
-        <div id="export">
-          <button class="accordion">Export</button>
-          <div class="panel">
-            <div class="controlpanel">
-              <div>
+          <div id="palete">
+            <button class="accordion active">Palette</button>
+            <div id="fg" class="panel">
+              <label>Foreground Colour:</label>
+              <table>
+                <tr>
+                  <td class="colorbox selected" id="EMPTYBOX">None</td>
+                  <td class="colorbox" id="BOX1"></td>
+                  <td class="colorbox" id="BOX2"></td>
+                  <td class="colorbox" id="BOX3"></td>
+                  <td class="colorbox" id="BOX4"></td>
+                  <td class="colorbox" id="BOX5"></td>
+                  <td class="colorbox" id="BOX6"></td>
+                  <td class="colorbox" id="BOX7"></td>
+                  <td class="colorbox" id="BOX8"></td>
+                  <td class="colorbox" id="BOX9"></td>
+                  <td class="colorbox" id="BOX10"></td>
+                  <td class="colorbox" id="BOX11"></td>
+                  <td class="colorbox" id="BOX12"></td>
+                </tr>
+                <tr>
+                  <td class="colornum" id="NUM0"></td>
+                  <td class="colornum" id="NUM1"></td>
+                  <td class="colornum" id="NUM2"></td>
+                  <td class="colornum" id="NUM3"></td>
+                  <td class="colornum" id="NUM4"></td>
+                  <td class="colornum" id="NUM5"></td>
+                  <td class="colornum" id="NUM6"></td>
+                  <td class="colornum" id="NUM7"></td>
+                  <td class="colornum" id="NUM8"></td>
+                  <td class="colornum" id="NUM9"></td>
+                  <td class="colornum" id="NUM10"></td>
+                  <td class="colornum" id="NUM11"></td>
+                  <td class="colornum" id="NUM12"></td>
+                </tr>
+              </table>
+              <label>Colour Name:</label>
+              <label id="colourname"> </label>
+              <div id="coloursliders">
                 <span>
-                  <label for="export_width">Export Width (px):</label>
-                  <span>
-                    <input class="readout" id="export_width" value="1920" />
-                  </span>
+                  <label>Red:</label>
+                  <input
+                    type="range"
+                    min="0"
+                    max="255"
+                    id="REDSLIDE"
+                    value="0" />
+                  <input class="readout" id="REDVAL" value="0" />
+                </span>
+
+                <span>
+                  <label>Green:</label>
+                  <input
+                    type="range"
+                    min="0"
+                    max="255"
+                    id="GREENSLIDE"
+                    value="0" />
+                  <input class="readout" id="GREENVAL" value="0" />
+                </span>
+
+                <span>
+                  <label>Blue:</label>
+                  <input
+                    type="range"
+                    min="0"
+                    max="255"
+                    id="BLUESLIDE"
+                    value="0" />
+                  <input class="readout" id="BLUEVAL" value="0" />
                 </span>
               </div>
             </div>
-            <div id="draftexport">
-              <h4>Draft</h4>
-              <span> <button id="svg">SVG</button> </span>
-              <span> <button id="jpeg">JPEG</button> </span>
-              <span> <button id="png">PNG</button> </span>
-              <span> <button id="txt">Text</button> </span>
-            </div>
-            <div id="repeatexport">
-              <h4>Repeat</h4>
-              <span> <button id="svg">SVG</button> </span>
-              <span> <button id="jpeg">JPEG</button> </span>
-              <span> <button id="png">PNG</button> </span>
-            </div>
           </div>
-        </div>
 
-        <div id="fileio">
-          <button class="accordion">Files</button>
-          <div class="panel">
-            <span> <button id="save">Save</button> </span>
-            <span>
-              <label>Load</label>
-              <input
-                type="file"
-                accept="application/json,.tdd,.txt"
-                id="load" />
-            </span>
+          <div id="export">
+            <button class="accordion">Export</button>
+            <div class="panel">
+              <div class="controlpanel">
+                <div>
+                  <span>
+                    <label for="export_width">Export Width (px):</label>
+                    <span>
+                      <input class="readout" id="export_width" value="1920" />
+                    </span>
+                  </span>
+                </div>
+              </div>
+              <div id="draftexport">
+                <h4>Draft</h4>
+                <span> <button id="svg">SVG</button> </span>
+                <span> <button id="jpeg">JPEG</button> </span>
+                <span> <button id="png">PNG</button> </span>
+                <span> <button id="txt">Text</button> </span>
+              </div>
+              <div id="repeatexport">
+                <h4>Repeat</h4>
+                <span> <button id="svg">SVG</button> </span>
+                <span> <button id="jpeg">JPEG</button> </span>
+                <span> <button id="png">PNG</button> </span>
+              </div>
+            </div>
+          </div>
+
+          <div id="fileio">
+            <button class="accordion">Files</button>
+            <div class="panel">
+              <div><button id="save">Save</button></div>
+              <div>
+                <label>Load</label>
+                <input
+                  type="file"
+                  accept="application/json,.tdd,.txt"
+                  id="load" />
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      </section>
+
+      <section id="mainsection">
+        <div id="draftcanvas" class="draftcanvas"></div>
+      </section>
+
+      <section id="repeatsection">
+        <div id="repeatcanvas" class="draftcanvas"></div>
+      </section>
+
+      <section id="textinstructions">
+        <ul>
+          <li>Threading:</li>
+          <ol id="threadinginstructions"></ol>
+          <li>Turning:</li>
+          <ol id="turninginstructions"></ol>
+        </ul>
+      </section>
     </main>
     <footer>
-      <p id="copyright">
+      <p class="copyright">
         Tablet Weaving Draft Designer v1.7.1 Copyright &copy; 2015-2024 James P.
         Weaver and Catherine Weaver. The copyright of drafts designed with this
         software rests with the designer of the draft, not of the software.
