@@ -1,5 +1,3 @@
-@import 'colors.scss';
-
 $background-color: hsv(42, 2%, 100%);
 $text-color: black;
 $text-background-color: white;
@@ -20,6 +18,7 @@ header {
   flex: 1;
   gap: 1em;
 }
+
 main {
   flex: 1;
   display: flex;
@@ -31,34 +30,32 @@ main {
     gap: 1em;
   }
 }
+
 footer {
   gap: 1em;
   flex: 1;
 }
 
 h1,
-h3 {
+h3,
+h4 {
   text-align: center;
   font-variant: small-caps;
 }
 
 h4 {
-  text-align: center;
   font-size: smaller;
-  font-variant: small-caps;
 }
 
-.instructionlink a {
-  font-size: x-large;
-  font-variant: small-caps;
-}
-
-.export_width_span {
-  width: 100%;
-}
-
-#mainsection {
-  display: inline-block;
+.instructionlink {
+  font-size: 200%;
+  text-align: center;
+  margin-bottom: 0em;
+  margin-top: 0em;
+  a {
+    font-size: x-large;
+    font-variant: small-caps;
+  }
 }
 
 #textinstructions {
@@ -72,10 +69,6 @@ h4 {
   padding: 5px 5px 5px;
 }
 
-#repeatsection {
-  display: inline-block;
-}
-
 .controlbar {
   border: $border;
   border-radius: $border-radius;
@@ -84,51 +77,53 @@ h4 {
   display: flex;
   flex-direction: column;
   gap: 1em;
-  div {
+
+  .controlpanel {
+    display: flex;
+    flex-direction: column;
     width: 100%;
     display: inline-block;
     background-color: $control_background;
+
+    .panel {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5em;
+
+      span {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        label {
+          flex: 2;
+          display: inline;
+        }
+        span {
+          flex: 3;
+          input.readout {
+            width: 5rem;
+          }
+        }
+      }
+    }
   }
-
-  controlpanel {
-    display: flex;
-    flex-direction: column;
-  }
 }
 
-.instructionlink {
-  font-size: 200%;
-  text-align: center;
-  margin-bottom: 0em;
-  margin-top: 0em;
-}
-
-.blogvert {
-  font-size: 100%;
-  text-align: center;
-}
-
-.copyright_notice {
-  font-size: 100%;
-  text-align: center;
-}
-
-.draftcanvas {
-  border: $border;
-  border-radius: $border-radius;
-  margin-bottom: 30px;
-}
-
-.repeacanvas {
+.draftcanvas,
+.repeatcanvas {
   border: $border;
   border-radius: $border-radius;
 }
 
 .colorbox {
-  width: 20px;
-  height: 20px;
-  font-size: 50%;
+  width: 2em;
+  height: 2em;
   border: 2px solid transparent;
+  border-radius: $border-radius;
+}
+
+.colornum {
+  text-align: center;
 }
 
 .selected {
@@ -222,30 +217,18 @@ h4 {
 }
 
 .slider {
-  position: absolute;
   cursor: pointer;
-  top: -17px;
-  left: 0;
-  right: 0;
-  bottom: 0;
   background-color: #2196f3;
   -webkit-transition: 0.4s;
   transition: 0.4s;
+  &:before {
+    content: '';
+    text-align: center;
+    background-color: white;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+  }
 }
-
-.slider:before {
-  content: '';
-  position: absolute;
-  text-align: center;
-  height: 26px;
-  width: 26px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  -webkit-transition: 0.4s;
-  transition: 0.4s;
-}
-
 input:checked + .slider {
   background-color: #2196f3;
 }
