@@ -4,7 +4,7 @@ This is a simple javascript based application intended to help practictioners of
 
 The original live version of this can be found at:
 
-http://bazzalisk.org/tabletweave/
+[http://bazzalisk.org/tabletweave/](http://bazzalisk.org/tabletweave/)
 
 # Todos:
 
