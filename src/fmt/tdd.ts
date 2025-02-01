@@ -2,7 +2,10 @@
   This file provides a class for representing a tdd file in memory
 */
 import * as Colour from './Colour'
-export { TDDDraft }
+import * as ntc from 'ntc'
+
+export { TDDDraft, TDDDraftFromString }
+
 type PaletteKey = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 'a' | 'b'
 type Palette = Record<PaletteKey, Colour.RGBColour>
 
@@ -327,7 +330,7 @@ class TDDDraft {
   }
 }
 
-function TDDDraftFromString(raw) {
+function TDDDraftFromString(raw: string): TDDDraft {
   var r = new TDDDraft()
   var lines = raw.split(/\r?\n/)
 
@@ -335,7 +338,10 @@ function TDDDraftFromString(raw) {
   var match = lines.shift().match(/^#\s*tdd\s+v(\d+)\.(\d+)\s*$/)
   if (!match) throw 'Not a valid tdd file'
 
-  if (match[1] > 1 || (match[1] == 1 && match[2] > 0)) {
+  if (
+    parseInt(match[1]) > 1 ||
+    (parseInt(match[1]) == 1 && parseInt(match[2]) > 0)
+  ) {
     console.log(
       'WARNING: Processing tdd file from future version of tdd. This may not work.'
     )

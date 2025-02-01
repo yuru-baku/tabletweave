@@ -1,5 +1,16 @@
 // This file contains a class that can represent the SVG-based rendering of a TDDDraft
 
+export { TDDSVGView }
+import { RGBColour } from './Colour'
+import { TDDDraft } from './tdd'
+
+// Erweitere das jQuery-Interface in TypeScript
+declare global {
+  interface JQuery {
+    svg(method?: string): any
+  }
+}
+
 const cellwidth = 20
 const cellheight = 20
 const cellborder = 2
@@ -10,17 +21,67 @@ const labelpadding = 3
 
 const hole_labels = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
 
-emptycellColour = new RGBColour(0xff, 0xff, 0xff)
+const emptycellColour = new RGBColour(0xff, 0xff, 0xff)
 
 class TDDSVGView {
+  svg: any
+  labelWidth: number
+  needsFullRedraw: boolean
+  bg: any
+  // The Twist diagram
+  twist: any[]
+  // The turning diagram
+  turning: any[]
+  // The threading diagram
+  threading: any[]
+  labels: { picks: any[]; tablets: any[]; holes: any[] }
+
+  // Settings
+  show_turning: boolean
+  show_threading: boolean
+  showing_turning: boolean
+  showing_threading: boolean
+  showing_twist: boolean
+  show_ovals: boolean
+  show_squares: boolean
+  show_twist: boolean
+  show_reversals: boolean
+  show_grid: boolean
+  labelholescw: boolean
+  labelingholescw: boolean
+  invertsz: boolean
+  invertingsz: boolean
+
+  hruler_position = undefined
+  vruler_position = undefined
+
+  forwardcolour: RGBColour
+  backwardcolour: RGBColour
+
+  start_pick: any
+  end_pick: any
+  repeats: any
+
+  // Stuctural elements for arranging the svg
+  twist_group: any
+  main_group: any
+  tablet_label_group: any
+  overlay: any
+  threading_group: any
+  ruler_group: any
+  threading_main_group: any
+  threading_ruler_group: any
+  hruler: any
+  vruler: { turning: any; threading: any }
+  invertingholessz: boolean
+
   constructor() {
     var parent = document.createElement('div')
-    $(parent).svg()
     this.svg = $(parent).svg('get')
 
-    this.labelwidth = 30
+    this.labelWidth = 30
 
-    this.needs_full_redraw = true
+    this.needsFullRedraw = true
 
     // Height and width will really be set when we
     // conform to a draft, for now set some defaults
@@ -32,7 +93,7 @@ class TDDSVGView {
       (intertablegap + cellborder + (cellborder + cellheight) * 4)
 
     const fullwidth =
-      this.labelwidth + cellborder + (cellborder + cellwidth) * 1
+      this.labelWidth + cellborder + (cellborder + cellwidth) * 1
 
     if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
       // This is needed in Firefox to make image export work, but breaks image export in other browsers
@@ -123,9 +184,9 @@ class TDDSVGView {
 
     this.hruler = this.svg.line(
       this.ruler_group,
-      this.labelwidth - cellborder,
+      this.labelWidth - cellborder,
       0,
-      this.labelwidth + cellborder + (cellborder + cellwidth),
+      this.labelWidth + cellborder + (cellborder + cellwidth),
       0,
       { stroke: '#000000', strokeWidth: cellborder * 4 }
     )
@@ -135,17 +196,17 @@ class TDDSVGView {
     this.vruler = {
       turning: this.svg.line(
         this.ruler_group,
-        this.labelwidth,
+        this.labelWidth,
         0,
-        this.labelwidth,
+        this.labelWidth,
         cellheight + cellborder + cellborder,
         { stroke: '#000000', strokeWidth: cellborder * 4 }
       ),
       threading: this.svg.line(
         this.threading_ruler_group,
-        this.labelwidth,
+        this.labelWidth,
         threading_start_y,
-        this.labelwidth,
+        this.labelWidth,
         threading_start_y + (cellheight + cellborder) * 4 + cellborder,
         { stroke: '#000000', strokeWidth: cellborder * 4 }
       ),
@@ -178,7 +239,7 @@ class TDDSVGView {
 
   showGrid(val) {
     if (this.show_grid != val) {
-      this.needs_full_redraw = true
+      this.needsFullRedraw = true
     }
     this.show_grid = val
   }
@@ -226,8 +287,8 @@ class TDDSVGView {
         : (this.end_pick - this.start_pick + 1) * this.repeats
     const labelwidth =
       (this.show_turning ? ('' + num_picks).length * 10 : 10) + labelpadding * 2
-    if (this.labelwidth != labelwidth) {
-      this.labelwidth = labelwidth
+    if (this.labelWidth != labelwidth) {
+      this.labelWidth = labelwidth
       while (this.labels.picks.length > 0) {
         $(this.labels.picks.pop()).remove()
       }
@@ -253,7 +314,7 @@ class TDDSVGView {
     }
 
     if (
-      this.needs_full_redraw ||
+      this.needsFullRedraw ||
       (this.repeats != undefined &&
         this.turning.length !=
           (this.end_pick - this.start_pick + 1) * this.repeats) ||
@@ -275,7 +336,7 @@ class TDDSVGView {
     this.conform_turning(draft)
     this.conform_rulers(draft)
 
-    this.needs_full_redraw = false
+    this.needsFullRedraw = false
   }
 
   conform_size(draft) {
@@ -305,7 +366,7 @@ class TDDSVGView {
         : 0)
 
     const fullwidth =
-      this.labelwidth + cellborder + (cellborder + cellwidth) * draft.tablets()
+      this.labelWidth + cellborder + (cellborder + cellwidth) * draft.tablets()
 
     $(this.svg.root()).width(fullwidth)
     $(this.svg.root()).height(fullheight)
@@ -323,7 +384,7 @@ class TDDSVGView {
       $(this.labels.picks.pop()).remove()
     }
     for (var y = 0; y < this.labels.picks.length; y++) {
-      $(this.labels.picks[y]).attr('x', this.labelwidth - labelpadding)
+      $(this.labels.picks[y]).attr('x', this.labelWidth - labelpadding)
       $(this.labels.picks[y]).attr(
         'y',
         turning_start_y + (cellborder + cellheight) * (num_picks - y) - 5
@@ -344,7 +405,7 @@ class TDDSVGView {
       this.labels.picks.push(
         this.svg.text(
           this.main_group,
-          this.labelwidth - labelpadding,
+          this.labelWidth - labelpadding,
           turning_start_y + (cellborder + cellheight) * (num_picks - y) - 5,
           label,
           {
@@ -363,7 +424,7 @@ class TDDSVGView {
       const hole_label = this.labelholescw
         ? hole_labels[y]
         : hole_labels[draft.holes() - y - 1]
-      $(this.labels.holes[y]).attr('x', this.labelwidth - labelpadding)
+      $(this.labels.holes[y]).attr('x', this.labelWidth - labelpadding)
       $(this.labels.holes[y]).attr(
         'y',
         threading_start_y + (cellborder + cellheight) * (y + 1) - 5
@@ -378,7 +439,7 @@ class TDDSVGView {
       this.labels.holes.push(
         this.svg.text(
           this.threading_main_group,
-          this.labelwidth - labelpadding,
+          this.labelWidth - labelpadding,
           threading_start_y + (cellborder + cellheight) * (y + 1) - 5,
           hole_label,
           {
@@ -397,7 +458,7 @@ class TDDSVGView {
     for (var x = 0; x < this.labels.tablets.length; x++) {
       $(this.labels.tablets[x]).attr(
         'x',
-        this.labelwidth +
+        this.labelWidth +
           cellborder +
           (cellborder + cellwidth) * x +
           cellwidth / 2
@@ -409,7 +470,7 @@ class TDDSVGView {
       this.labels.tablets.push(
         this.svg.text(
           this.tablet_label_group,
-          this.labelwidth +
+          this.labelWidth +
             cellborder +
             (cellborder + cellwidth) * x +
             cellwidth / 2,
@@ -430,7 +491,7 @@ class TDDSVGView {
     for (var x = 0; x < this.twist.length; x++) {
       $(this.twist[x]).attr(
         'x',
-        this.labelwidth +
+        this.labelWidth +
           cellborder +
           (cellborder + cellwidth) * x +
           cellwidth / 2
@@ -442,7 +503,7 @@ class TDDSVGView {
       this.twist.push(
         this.svg.text(
           this.twist_group,
-          this.labelwidth +
+          this.labelWidth +
             cellborder +
             (cellborder + cellwidth) * x +
             cellwidth / 2,
@@ -485,7 +546,7 @@ class TDDSVGView {
         this.threading.push({
           direction: this.svg.text(
             this.threading_main_group,
-            this.labelwidth +
+            this.labelWidth +
               cellborder +
               (cellborder + cellwidth) * x +
               cellwidth / 2,
@@ -501,7 +562,7 @@ class TDDSVGView {
       }
       $(this.threading[x].direction).attr(
         'x',
-        this.labelwidth +
+        this.labelWidth +
           cellborder +
           (cellborder + cellwidth) * x +
           cellwidth / 2
@@ -611,8 +672,11 @@ class TDDSVGView {
       }
 
       if (this.repeats != undefined) {
-        var y
-        for (y = draft.picks() - 1; y > draft.picks() - this.start_pick; y--) {
+        for (
+          var y = draft.picks() - 1;
+          y > draft.picks() - this.start_pick;
+          y--
+        ) {
           if ((draft.threading[x] == 'S') == (draft.turning[y][x] == '/')) {
             tablet_position[x] =
               (tablet_position[x] + draft.holes() - 1) % draft.holes()
@@ -625,7 +689,7 @@ class TDDSVGView {
 
         while (cell >= 0) {
           for (
-            y = draft.picks() - this.start_pick;
+            var y = draft.picks() - this.start_pick;
             y >= draft.picks() - this.end_pick;
             y--
           ) {
@@ -734,20 +798,20 @@ class TDDSVGView {
       (!this.show_threading && this.hruler_position <= 0)
     ) {
       $(this.hruler).attr('visibility', 'hidden')
-      $(this.hruler).attr('x1', this.labelwidth - cellborder)
+      $(this.hruler).attr('x1', this.labelWidth - cellborder)
       $(this.hruler).attr(
         'x2',
-        this.labelwidth +
+        this.labelWidth +
           cellborder +
           (cellborder + cellwidth) * draft.tablets()
       )
       $(this.hruler).attr('y1', threading_start_y)
       $(this.hruler).attr('y2', threading_start_y)
     } else {
-      $(this.hruler).attr('x1', this.labelwidth - cellborder)
+      $(this.hruler).attr('x1', this.labelWidth - cellborder)
       $(this.hruler).attr(
         'x2',
-        this.labelwidth +
+        this.labelWidth +
           cellborder +
           (cellborder + cellwidth) * draft.tablets()
       )
@@ -783,28 +847,28 @@ class TDDSVGView {
 
     if (this.vruler_position == undefined) {
       $(this.vruler.turning).attr('visibility', 'hidden')
-      $(this.vruler.turning).attr('x1', this.labelwidth)
+      $(this.vruler.turning).attr('x1', this.labelWidth)
       $(this.vruler.turning).attr('y1', turning_start_y)
-      $(this.vruler.turning).attr('x2', this.labelwidth)
+      $(this.vruler.turning).attr('x2', this.labelWidth)
       $(this.vruler.turning).attr('y2', turning_start_y)
 
       $(this.vruler.threading).attr('visibility', 'hidden')
-      $(this.vruler.threading).attr('x1', this.labelwidth)
+      $(this.vruler.threading).attr('x1', this.labelWidth)
       $(this.vruler.threading).attr('y1', threading_start_y)
-      $(this.vruler.threading).attr('x2', this.labelwidth)
+      $(this.vruler.threading).attr('x2', this.labelWidth)
       $(this.vruler.threading).attr('y2', threading_start_y)
     } else {
       if (this.show_turning) {
         $(this.vruler.turning).attr('visibility', 'visible')
         $(this.vruler.turning).attr(
           'x1',
-          this.labelwidth +
+          this.labelWidth +
             (cellwidth + cellborder) * (this.vruler_position - 1)
         )
         $(this.vruler.turning).attr('y1', turning_start_y)
         $(this.vruler.turning).attr(
           'x2',
-          this.labelwidth +
+          this.labelWidth +
             (cellwidth + cellborder) * (this.vruler_position - 1)
         )
         $(this.vruler.turning).attr(
@@ -815,9 +879,9 @@ class TDDSVGView {
         )
       } else {
         $(this.vruler.turning).attr('visibility', 'hidden')
-        $(this.vruler.turning).attr('x1', this.labelwidth)
+        $(this.vruler.turning).attr('x1', this.labelWidth)
         $(this.vruler.turning).attr('y1', turning_start_y)
-        $(this.vruler.turning).attr('x2', this.labelwidth)
+        $(this.vruler.turning).attr('x2', this.labelWidth)
         $(this.vruler.turning).attr('y2', turning_start_y)
       }
 
@@ -826,13 +890,13 @@ class TDDSVGView {
 
         $(this.vruler.threading).attr(
           'x1',
-          this.labelwidth +
+          this.labelWidth +
             (cellwidth + cellborder) * (this.vruler_position - 1)
         )
         $(this.vruler.threading).attr('y1', threading_start_y)
         $(this.vruler.threading).attr(
           'x2',
-          this.labelwidth +
+          this.labelWidth +
             (cellwidth + cellborder) * (this.vruler_position - 1)
         )
         $(this.vruler.threading).attr(
@@ -843,9 +907,9 @@ class TDDSVGView {
         )
       } else {
         $(this.vruler.threading).attr('visibility', 'hidden')
-        $(this.vruler.threading).attr('x1', this.labelwidth)
+        $(this.vruler.threading).attr('x1', this.labelWidth)
         $(this.vruler.threading).attr('y1', threading_start_y)
-        $(this.vruler.threading).attr('x2', this.labelwidth)
+        $(this.vruler.threading).attr('x2', this.labelWidth)
         $(this.vruler.threading).attr('y2', threading_start_y)
       }
     }
@@ -862,7 +926,7 @@ class TDDSVGView {
   ) {
     var rect = this.svg.rect(
       group,
-      this.labelwidth + (cellborder + cellwidth) * x,
+      this.labelWidth + (cellborder + cellwidth) * x,
       offset + (cellborder + cellheight) * y,
       cellwidth + cellborder,
       cellheight + cellborder,
@@ -877,21 +941,20 @@ class TDDSVGView {
     if (overlay) {
       revline = this.svg.line(
         overlay,
-        this.labelwidth + (cellborder + cellwidth) * x,
+        this.labelWidth + (cellborder + cellwidth) * x,
         offset + (cellborder + cellheight) * y + cellheight + cellborder,
-        this.labelwidth + (cellborder + cellwidth) * x + cellwidth + cellborder,
+        this.labelWidth + (cellborder + cellwidth) * x + cellwidth + cellborder,
         offset + (cellborder + cellheight) * y + cellheight + cellborder,
         {
           strokeWidth: cellborder,
           stroke: '#FF0000',
           visibility: 'hidden',
-          strokeWidth: cellborder,
         }
       )
     }
 
     const X_coord =
-      this.labelwidth +
+      this.labelWidth +
       cellborder +
       (cellborder + cellwidth) * x +
       cellwidth / 2
@@ -927,19 +990,19 @@ class TDDSVGView {
   }
 
   move_cell(cell, x, y, offset = 0) {
-    $(cell.rect).attr('x', this.labelwidth + (cellborder + cellwidth) * x)
+    $(cell.rect).attr('x', this.labelWidth + (cellborder + cellwidth) * x)
     $(cell.rect).attr('y', offset + (cellborder + cellheight) * y)
     $(cell.rect).css('strokeWidth', this.show_grid ? cellborder : 0)
-    $(cell.revline).attr('x1', this.labelwidth + (cellborder + cellwidth) * x)
+    $(cell.revline).attr('x1', this.labelWidth + (cellborder + cellwidth) * x)
     $(cell.revline).attr('y1', offset + (cellborder + cellheight) * (y + 1))
     $(cell.revline).attr(
       'x2',
-      this.labelwidth + (cellborder + cellwidth) * (x + 1)
+      this.labelWidth + (cellborder + cellwidth) * (x + 1)
     )
     $(cell.revline).attr('y2', offset + (cellborder + cellheight) * (y + 1))
 
     cell.x =
-      this.labelwidth +
+      this.labelWidth +
       cellborder +
       (cellborder + cellwidth) * x +
       cellwidth / 2
@@ -991,7 +1054,7 @@ class TDDSVGView {
     }
   }
 
-  svg_coord_to_tablet(x, view, draft) {
+  svg_coord_to_tablet(x: number, view: TDDSVGView, draft: TDDDraft) {
     const num_picks =
       view.repeats == undefined
         ? draft.picks()
@@ -1002,11 +1065,11 @@ class TDDSVGView {
     if (x < labelwidth + cellborder / 2) {
       return -1
     } else {
-      return parseInt((x - labelwidth) / (cellborder + cellwidth))
+      return (x - labelwidth) / (cellborder + cellwidth)
     }
   }
 
-  svg_coord_to_pick(y, draft) {
+  svg_coord_to_pick(y: number, draft: TDDDraft) {
     const turning_start_y = this.show_twist ? cellborder + cellheight : 0
     if (
       !this.show_turning ||
@@ -1015,9 +1078,7 @@ class TDDSVGView {
       return -1
     } else {
       return (
-        draft.picks() -
-        parseInt((y - turning_start_y) / (cellborder + cellheight)) -
-        1
+        draft.picks() - (y - turning_start_y) / (cellborder + cellheight) - 1
       )
     }
   }
@@ -1036,7 +1097,7 @@ class TDDSVGView {
     if (y < threading_start_y) {
       return -1
     } else if (y < threading_end_y) {
-      return parseInt((y - threading_start_y) / (cellborder + cellheight))
+      return (y - threading_start_y) / (cellborder + cellheight)
     } else {
       return -1
     }

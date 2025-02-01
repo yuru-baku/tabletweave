@@ -1,5 +1,14 @@
 // The main script for the draft designer
 
+import { saveAs } from 'file-saver'
+import * as Cookies from 'js-cookie'
+import * as ntc from 'ntc'
+import { TDDDraft, TDDDraftFromString } from './fmt/tdd'
+import * as $ from 'jquery'
+import { TDDSVGView } from './fmt/TDDSVGView'
+import { RGBColour } from './fmt/Colour'
+import { json_to_tdd } from './fmt/json_to_tdd'
+
 var draft = new TDDDraft()
 var view = new TDDSVGView()
 var repeat = new TDDSVGView()
@@ -157,9 +166,9 @@ function loadFromLocal() {
 }
 
 function updateDraft() {
-  var picks = parseInt($('#mainrowcontrols .readout').val())
-  var holes = parseInt($('#lowrowcontrols .readout').val())
-  var tablets = parseInt($('#colcontrols .readout').val())
+  var picks = parseInt(<string>$('#mainrowcontrols .readout').val())
+  var holes = parseInt(<string>$('#lowrowcontrols .readout').val())
+  var tablets = parseInt(<string>$('#colcontrols .readout').val())
   var addright = $('#addright').prop('checked')
 
   if (picks < draft.picks()) {
@@ -188,21 +197,21 @@ function updateDraft() {
     }
   }
 
-  if ($('#hruler .readout').val() > draft.picks() + 1) {
+  if (<number>$('#hruler .readout').val() > draft.picks() + 1) {
     $('#hruler .readout').val(draft.picks() + 1)
-  } else if ($('#hruler .readout').val() < -draft.holes()) {
+  } else if (<number>$('#hruler .readout').val() < -draft.holes()) {
     $('#hruler .readout').val(-draft.holes())
   }
 
-  if ($('#vruler .readout').val() > draft.tablets() + 1) {
+  if (<number>$('#vruler .readout').val() > draft.tablets() + 1) {
     $('#vruler .readout').val(draft.tablets() + 1)
   }
 
-  if ($('#repeatstart .readout').val() > draft.picks()) {
+  if (<number>$('#repeatstart .readout').val() > draft.picks()) {
     $('#repeatstart .readout').val(draft.picks())
   }
 
-  if ($('#repeatend .readout').val() > draft.picks()) {
+  if (<number>$('#repeatend .readout').val() > draft.picks()) {
     $('#repeatend .readout').val(draft.picks())
   }
 
@@ -210,15 +219,21 @@ function updateDraft() {
 }
 
 function redraw() {
-  var scale = Math.pow(2, parseInt($('#scalecontrols .readout').val()) / 10)
-  var rscale = Math.pow(2, parseInt($('#rscalecontrols .readout').val()) / 10)
+  var scale = Math.pow(
+    2,
+    parseInt(<string>$('#scalecontrols .readout').val()) / 10
+  )
+  var rscale = Math.pow(
+    2,
+    parseInt(<string>$('#rscalecontrols .readout').val()) / 10
+  )
 
   view.conform(draft)
   if ($('#showrepeats').prop('checked')) {
     repeat.conform(draft)
   }
 
-  var bbox = $('#draftcanvas svg')[0].getBBox()
+  var bbox = $('#draftcanvas svg')[0].getBoundingClientRect()
   $('#draftcanvas svg').width(bbox.width * scale)
   $('#draftcanvas svg').height(bbox.height * scale)
 
@@ -307,7 +322,7 @@ function redraw() {
   }
 
   if ($('#showrepeats').prop('checked')) {
-    bbox = $('#repeatcanvas svg')[0].getBBox()
+    bbox = $('#repeatcanvas svg')[0].getBoundingClientRect()
 
     $('#repeatcanvas svg').width(bbox.width * rscale)
     $('#repeatcanvas svg').height(bbox.height * rscale)
@@ -437,7 +452,7 @@ function setupNumberInput(
   }
   $('#' + id + ' .readout').change(function () {
     var new_val = validate(
-      Math.round(parseFloat($('#' + id + ' .readout').val()) / increment) *
+      Math.round(<number>$('#' + id + ' .readout').val() / increment) *
         increment,
       min_val,
       max_val
@@ -447,8 +462,7 @@ function setupNumberInput(
   })
   $('#' + id + ' .minus').click(function () {
     var new_val = validate(
-      (Math.round(parseFloat($('#' + id + ' .readout').val()) / increment) -
-        1) *
+      (Math.round(<number>$('#' + id + ' .readout').val() / increment) - 1) *
         increment,
       min_val,
       max_val
@@ -458,8 +472,7 @@ function setupNumberInput(
   })
   $('#' + id + ' .plus').click(function () {
     var new_val = validate(
-      (Math.round(parseFloat($('#' + id + ' .readout').val()) / increment) +
-        1) *
+      (Math.round(<number>$('#' + id + ' .readout').val() / increment) + 1) *
         increment,
       min_val,
       max_val,
@@ -471,7 +484,7 @@ function setupNumberInput(
 
   $('#' + id + ' .readout').val(
     validate(
-      Math.round(parseFloat($('#' + id + ' .readout').val()) / increment) *
+      Math.round(<number>$('#' + id + ' .readout').val() / increment) *
         increment,
       min_val,
       max_val
@@ -512,35 +525,35 @@ function setControlsFromDraft() {
   $('#colcontrols .readout').val(draft.tablets())
   $('#draftname .readout').val(draft.name)
 
-  if ($('#hruler .readout').val() > draft.picks() + 1) {
+  if (<number>$('#hruler .readout').val() > draft.picks() + 1) {
     $('#hruler .readout').val(draft.picks() + 1)
-  } else if ($('#hruler .readout').val() < -draft.holes()) {
+  } else if (<number>$('#hruler .readout').val() < -draft.holes()) {
     $('#hruler .readout').val(-draft.holes())
   }
   view.hRuler(
     $('#showhruler').prop('checked') ? $('#hruler .readout').val() : undefined
   )
 
-  if ($('#vruler .readout').val() > draft.tablets() + 1) {
+  if (<number>$('#vruler .readout').val() > draft.tablets() + 1) {
     $('#vruler .readout').val(draft.tablets() + 1)
   }
   view.vRuler(
     $('#showvruler').prop('checked') ? $('#vruler .readout').val() : undefined
   )
 
-  if ($('#repeatstart .readout').val() > draft.picks()) {
+  if (<number>$('#repeatstart .readout').val() > draft.picks()) {
     $('#repeatstart .readout').val(draft.picks())
     repeat.startPick(draft.picks())
   }
 
-  if ($('#repeatend .readout').val() > draft.picks()) {
+  if (<number>$('#repeatend .readout').val() > draft.picks()) {
     $('#repeatend .readout').val(draft.picks())
     repeat.endPick(draft.picks())
   }
 }
 
 function loadFile() {
-  var files = $('#fileio #load')[0].files
+  var files = ($('#fileio #load')[0] as HTMLInputElement).files
   if (files.length > 0) {
     var reader = new FileReader()
 
@@ -549,14 +562,14 @@ function loadFile() {
         try {
           var data = e.target.result
 
-          if (!is_tdd && data.substring(0, 5) === '# tdd') {
+          if (!is_tdd && (<string>data).substring(0, 5) === '# tdd') {
             is_tdd = true
           }
 
           if (is_tdd) {
-            draft = TDDDraftFromString(data)
+            draft = TDDDraftFromString(<string>data)
           } else {
-            draft = json_to_tdd(JSON.parse(data))
+            draft = json_to_tdd(JSON.parse(<string>data))
           }
         } catch (err) {
           alert('File is corrupted and could not be loaded.')
@@ -576,6 +589,7 @@ function loadFile() {
 
 function saveFile() {
   try {
+    var filename = ''
     if (draft.name != '') {
       filename = draft.name + '.tdd'
     } else {
@@ -659,7 +673,7 @@ function textDescriptionString() {
 }
 
 function exportTextDescription() {
-  var filename
+  var filename: string
   if (draft.name != '') {
     filename = draft.name + '.txt'
   } else {
@@ -669,7 +683,7 @@ function exportTextDescription() {
 }
 
 function exportDraft(mimetype, root) {
-  var width = parseInt($('#export_width').val())
+  const width = <number>$('#export_width').val()
 
   var process_blob = function (blob) {
     var extension
@@ -713,7 +727,7 @@ $(function () {
   Cookies.json = true
 
   $('#draftname .readout').change(function () {
-    draft.name = $('#draftname .readout').val()
+    draft.name = <string>$('#draftname .readout').val()
     saveToLocal()
   })
 
@@ -875,7 +889,7 @@ $(function () {
       return $('#repeatend .readout').val()
     },
     function () {
-      repeat.startPick(parseInt($('#repeatstart .readout').val()))
+      repeat.startPick(<number>$('#repeatstart .readout').val())
       saveToLocal()
       redraw()
     }
@@ -889,13 +903,13 @@ $(function () {
       return draft.picks()
     },
     function () {
-      repeat.endPick(parseInt($('#repeatend .readout').val()))
+      repeat.endPick(<number>$('#repeatend .readout').val())
       saveToLocal()
       redraw()
     }
   )
   setupNumberInput('numrepeats', 1, undefined, function () {
-    repeat.setRepeats(parseInt($('#numrepeats .readout').val()))
+    repeat.setRepeats(<number>$('#numrepeats .readout').val())
     saveToLocal()
     redraw()
   })
@@ -1008,7 +1022,7 @@ $(function () {
   view.showTurning($('#showupper').prop('checked'))
   view.showThreading($('#showlower').prop('checked'))
   view.showReversals($('#showreversal').prop('checked'))
-  view.greySaturation(0x100 - $('#GREYSLIDER').val())
+  view.greySaturation(0x100 - <number>$('#GREYSLIDER').val())
   view.labelHolesCW($('#labelholescw').prop('checked'))
   view.invertSZ($('#invertsz').prop('checked'))
   view.hRuler(
@@ -1027,9 +1041,9 @@ $(function () {
   repeat.hRuler(undefined)
   repeat.vRuler(undefined)
 
-  repeat.startPick(parseInt($('#repeatstart .readout').val()))
-  repeat.endPick(parseInt($('#repeatend .readout').val()))
-  repeat.setRepeats(parseInt($('#numrepeats .readout').val()))
+  repeat.startPick(<number>$('#repeatstart .readout').val())
+  repeat.endPick(<number>$('#repeatend .readout').val())
+  repeat.setRepeats(<number>$('#numrepeats .readout').val())
 
   applyAccordian()
 

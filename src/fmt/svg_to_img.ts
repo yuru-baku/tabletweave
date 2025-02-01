@@ -9,9 +9,8 @@ function svg_to_blob(svg) {
   }
 }
 
-function svg_to_url(svg) {
-  var DOMURL = window.URL || window.webkitURL || window
-  return DOMURL.createObjectURL(svg_to_blob(svg))
+function svg_to_url(svg): string {
+  return URL.createObjectURL(svg_to_blob(svg))
 }
 
 function draw_svg_to_canvas(svg, canvas, onload = function () {}) {
@@ -20,7 +19,7 @@ function draw_svg_to_canvas(svg, canvas, onload = function () {}) {
 
   var img = new Image()
   img.onload = function () {
-    height = svg.clientHeight * (canvas.width / svg.clientWidth)
+    const height = svg.clientHeight * (canvas.width / svg.clientWidth)
     canvas.height = height
     ctx.drawImage(img, 0, 0, canvas.width, height)
     onload()
