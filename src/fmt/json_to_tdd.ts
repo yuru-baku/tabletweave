@@ -1,8 +1,11 @@
 /*
   This script provides a function that transforms the old json format into the new .tdd format
   */
+import { RGBColour } from './Colour'
+import { TDDDraft } from './tdd'
+export { json_to_tdd }
 
-const colorids = [
+const colorIDs = [
   '0',
   '1',
   '2',
@@ -21,7 +24,7 @@ const colorids = [
   'f',
 ]
 
-function json_to_tdd(json) {
+function json_to_tdd(json: JSON) {
   var r = new TDDDraft()
 
   if (json['lower_cells'].length < 1) {
@@ -44,7 +47,7 @@ function json_to_tdd(json) {
       var row = []
       for (var x of y) {
         if (x['colorid'] >= 0 && x['colorid'] < 16) {
-          row.push(colorids[x['colorid']])
+          row.push(colorIDs[x['colorid']])
         } else if (x['colorid'] == -1) {
           row.push(' ')
         } else {
@@ -60,7 +63,7 @@ function json_to_tdd(json) {
     const regex = /rgb\(\s*(\d+),\s*(\d+),\s*(\d+)\)/
     var found = json['palette'][n].match(regex)
     if (found) {
-      r.palette[colorids[n]] = new RGBColour(found[1], found[2], found[3])
+      r.palette[colorIDs[n]] = new RGBColour(found[1], found[2], found[3])
     }
   }
 
@@ -76,7 +79,7 @@ function json_to_tdd(json) {
   for (var x = 0; x < r.turning[0].length; x++) {
     var dir = r.threading[x] == 'Z' ? '\\' : '/'
     for (var y = r.turning.length - 1; y >= 0; y--) {
-      if (json.main_cells[y][x]) {
+      if (json['main_cells'][y][x]) {
         dir = dir == '\\' ? '/' : '\\'
       }
       r.turning[y][x] = dir

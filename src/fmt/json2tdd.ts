@@ -1,8 +1,8 @@
 #!/usr/bin/env node
-
-var fs = require('fs')
-var path = require('path')
-var vm = require('vm')
+import * as fs from 'fs'
+import * as path from 'path'
+import * as vm from 'vm'
+import { json_to_tdd } from './json_to_tdd'
 
 for (var filename of ['Colour.js', 'tdd.js', 'json_to_tdd.js']) {
   vm.runInThisContext(
