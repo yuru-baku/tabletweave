@@ -1,10 +1,10 @@
 // The main script for the draft designer
-
+import '../sass_style/style.scss'
 import { saveAs } from 'file-saver'
 import * as Cookies from 'js-cookie'
 import * as ntc from 'ntc'
 import { TDDDraft, TDDDraftFromString } from './fmt/tdd'
-import * as $ from 'jquery'
+import $ from 'jquery'
 import { TDDSVGView } from './fmt/TDDSVGView'
 import { RGBColour } from './fmt/Colour'
 import { json_to_tdd } from './fmt/json_to_tdd'
@@ -259,10 +259,10 @@ function redraw() {
     for (i = 0; i < draft.tablets(); i++) {
       $('#threadinginstructions').append(
         '<li class="instruction">' +
-          draft.describeTablet(i, invertsz) +
-          ' (' +
-          ($('#labelholescw').prop('checked') ? '&#x21BB;' : '&#x21BA;') +
-          ')</li>'
+        draft.describeTablet(i, invertsz) +
+        ' (' +
+        ($('#labelholescw').prop('checked') ? '&#x21BB;' : '&#x21BA;') +
+        ')</li>'
       )
       $('#threadinginstructions li').last().append('<ol type="A"></ol>')
       var ol = $('#threadinginstructions li').last().children().last()
@@ -282,8 +282,8 @@ function redraw() {
           ) {
             ol.append(
               '<li><b>' +
-                draft.describeHole(i, draft.holes() - j - 1) +
-                ' (selected)</b></li>'
+              draft.describeHole(i, draft.holes() - j - 1) +
+              ' (selected)</b></li>'
             )
           } else {
             ol.append(
@@ -299,8 +299,8 @@ function redraw() {
       if ($('#showhruler').val() && $('#hruler .readout').val() == i + 1) {
         $('#turninginstructions').append(
           '<li class="instruction"><b>' +
-            draft.describePick(i) +
-            ' (selected)</b></li>'
+          draft.describePick(i) +
+          ' (selected)</b></li>'
         )
       } else {
         $('#turninginstructions').append(
@@ -453,7 +453,7 @@ function setupNumberInput(
   $('#' + id + ' .readout').change(function () {
     var new_val = validate(
       Math.round(<number>$('#' + id + ' .readout').val() / increment) *
-        increment,
+      increment,
       min_val,
       max_val
     )
@@ -463,7 +463,7 @@ function setupNumberInput(
   $('#' + id + ' .minus').click(function () {
     var new_val = validate(
       (Math.round(<number>$('#' + id + ' .readout').val() / increment) - 1) *
-        increment,
+      increment,
       min_val,
       max_val
     )
@@ -473,7 +473,7 @@ function setupNumberInput(
   $('#' + id + ' .plus').click(function () {
     var new_val = validate(
       (Math.round(<number>$('#' + id + ' .readout').val() / increment) + 1) *
-        increment,
+      increment,
       min_val,
       max_val,
       true
@@ -485,7 +485,7 @@ function setupNumberInput(
   $('#' + id + ' .readout').val(
     validate(
       Math.round(<number>$('#' + id + ' .readout').val() / increment) *
-        increment,
+      increment,
       min_val,
       max_val
     )
@@ -869,7 +869,7 @@ $(function () {
   })
   var i
   for (i = 0; i < 12; i++) {
-    ;(function (i) {
+    ; (function (i) {
       $('#BOX' + (i + 1)).click(function () {
         fgcol = i
         saveToLocal()

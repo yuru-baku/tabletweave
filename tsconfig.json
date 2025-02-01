@@ -1,11 +1,27 @@
 {
   "compilerOptions": {
+    "baseUrl": "./",
+    "rootDir": "./src",
+    "outDir": "./dist",
     "module": "commonjs",
+    "esModuleInterop": true,
     "removeComments": true,
     "preserveConstEnums": true,
     "sourceMap": true,
-    "lib": ["ES2017", "dom"]
+    "lib": [
+      "ES2017",
+      "dom"
+    ],
+    "paths": {
+      "@lib/*": [
+        "./lib/*"
+      ]
+    }
   },
-  "include": ["src/**/*"],
-  "exclude": ["src/lib"]
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "lib"
+  ]
 }
