@@ -44,7 +44,7 @@ main section {
   background-color: hsl(0, 0%, 95%);
 }
 .controlbar .controlpanel .active:after {
-  content: "➖"; /* Unicode character for "minus" sign (-) */
+  content: '➖'; /* Unicode character for "minus" sign (-) */
 }
 .controlbar .controlpanel .accordion {
   background-color: hsl(0, 0%, 90%);
@@ -65,7 +65,7 @@ main section {
   transition: 0.2s;
 }
 .controlbar .controlpanel .accordion::after {
-  content: "➕"; /* Unicode character for "plus" sign (+) */
+  content: '➕'; /* Unicode character for "plus" sign (+) */
   font-size: 13px;
   color: #777;
   float: right;
@@ -152,9 +152,9 @@ main section {
   overflow: hidden;
 }
 
-label[for=labelholescw],
-label[for=lockdraft],
-label[for=addright] {
+label[for='labelholescw'],
+label[for='lockdraft'],
+label[for='addright'] {
   line-height: 60px;
 }
 

@@ -15,5 +15,9 @@
     "fmt": "^2.0.0",
     "ntc": "^0.0.1",
     "prettier": "^3.4.2"
+  },
+  "devDependencies": {
+    "@types/jquery": "^3.5.32",
+    "typescript": "^5.7.3"
   }
 }
