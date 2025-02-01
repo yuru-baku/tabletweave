@@ -2,7 +2,6 @@
 import '../sass_style/style.scss'
 import { saveAs } from 'file-saver'
 import * as Cookies from 'js-cookie'
-import * as ntc from 'ntc'
 import { TDDDraft, TDDDraftFromString } from './fmt/tdd'
 import $ from 'jquery'
 import { TDDSVGView } from './fmt/TDDSVGView'
@@ -13,6 +12,7 @@ var draft = new TDDDraft()
 var view = new TDDSVGView()
 var repeat = new TDDSVGView()
 var fgcol = -1
+
 
 function control_vals() {
   var accordion = {}
@@ -373,7 +373,7 @@ function redrawControls() {
     $('#GREENSLIDE').prop('disabled', false)
     $('#BLUESLIDE').prop('disabled', false)
     $('#colourname').text(
-      ntc.name(draft.colour(fgcol).getCSSHexadecimalRGB())[1]
+      "BLURP"
     )
   } else {
     $('#REDVAL').val(0)
@@ -724,7 +724,6 @@ function applyAccordian() {
 }
 
 $(function () {
-  Cookies.json = true
 
   $('#draftname .readout').change(function () {
     draft.name = <string>$('#draftname .readout').val()

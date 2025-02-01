@@ -3,14 +3,18 @@
     "baseUrl": "./",
     "rootDir": "./src",
     "outDir": "./dist",
-    "module": "commonjs",
     "esModuleInterop": true,
     "removeComments": true,
     "preserveConstEnums": true,
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "module": "NodeNext",
     "sourceMap": true,
+    "moduleResolution": "nodenext",
     "lib": [
-      "ES2017",
-      "dom"
+      "ES2020",
+      "DOM",
+      "DOM.Iterable"
     ],
     "paths": {
       "@lib/*": [
@@ -19,9 +23,6 @@
     }
   },
   "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "lib"
+    "src"
   ]
 }

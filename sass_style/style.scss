@@ -1,9 +1,9 @@
-$background-color: hsv(42, 2%, 100%);
+$background-color: hsl(42, 2%, 100%);
 $text-color: black;
 $text-background-color: white;
 $text-border-color: black;
-$control_background: hsl(0, 0, 95%);
-$active_highlight: hsl(0, 0, 50%);
+$control_background: hsl(0, 0%, 95%);
+$active_highlight: hsl(0, 0%, 50%);
 $border: 1px solid black;
 $border-radius: 5px;
 body {
@@ -55,7 +55,7 @@ main {
     }
 
     .accordion {
-      background-color: hsl(0, 0, 90%);
+      background-color: hsl(0, 0%, 90%);
       font-variant: small-caps;
       font-size: larger;
       color: black;

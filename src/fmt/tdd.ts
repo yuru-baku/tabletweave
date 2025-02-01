@@ -2,7 +2,6 @@
   This file provides a class for representing a tdd file in memory
 */
 import * as Colour from './Colour'
-import * as ntc from 'ntc'
 
 export { TDDDraft, TDDDraftFromString }
 
@@ -325,7 +324,7 @@ class TDDDraft {
       return 'Empty'
     } else {
       var n = ntc.name(c.getCSSHexadecimalRGB())
-      return n[1] + ' (' + c.getCSSHexadecimalRGB() + ')'
+      return ' (' + c.getCSSHexadecimalRGB() + ')'
     }
   }
 }
