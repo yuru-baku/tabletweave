@@ -11,18 +11,10 @@
     "module": "NodeNext",
     "sourceMap": true,
     "moduleResolution": "nodenext",
-    "lib": [
-      "ES2020",
-      "DOM",
-      "DOM.Iterable"
-    ],
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "paths": {
-      "@lib/*": [
-        "./lib/*"
-      ]
+      "@lib/*": ["./lib/*"]
     }
   },
-  "include": [
-    "src"
-  ]
+  "include": ["src"]
 }

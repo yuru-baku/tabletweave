@@ -2,7 +2,7 @@
   This file provides a class for representing a tdd file in memory
 */
 import * as Colour from './Colour'
-
+import * as NameThatColor from 'ntc-ts'
 export { TDDDraft, TDDDraftFromString }
 
 type PaletteKey = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 'a' | 'b'
@@ -16,6 +16,7 @@ class TDDDraft {
   turning: string[][]
 
   constructor() {
+    NameThatColor.initColors(NameThatColor.ORIGINAL_COLORS)
     this.name = 'untitled draft'
     this.resetPalette()
     this.threadingColours = [['1'], ['1'], ['1'], ['1']]
@@ -41,7 +42,7 @@ class TDDDraft {
   }
 
   toString(): string {
-    var r = '# tdd v1.0\n'
+    let r = '# tdd v1.0\n'
     r += '# ' + this.name + '\n'
     r += '\n'
 
@@ -85,8 +86,8 @@ class TDDDraft {
   }
 
   addPicks(num: number): void {
-    for (var i = 0; i < num; i++) {
-      var arr = this.turning[0].slice()
+    for (let i = 0; i < num; i++) {
+      let arr = this.turning[0].slice()
       this.turning.unshift(arr)
     }
   }
@@ -96,9 +97,9 @@ class TDDDraft {
   }
 
   addHoles(num: number): void {
-    var n = Math.min(num, 8 - this.holes())
-    for (var i = 0; i < n; i++) {
-      var arr = this.threadingColours[this.holes() - 1].slice()
+    let n = Math.min(num, 8 - this.holes())
+    for (let i = 0; i < n; i++) {
+      let arr = this.threadingColours[this.holes() - 1].slice()
       this.threadingColours.push(arr)
     }
   }
@@ -111,30 +112,30 @@ class TDDDraft {
   }
 
   addTabletsRight(num: number): void {
-    for (var i = 0; i < this.picks(); i++) {
-      for (var j = 0; j < num; j++) {
+    for (let i = 0; i < this.picks(); i++) {
+      for (let j = 0; j < num; j++) {
         this.turning[i].push(this.turning[i][this.turning[i].length - 1])
       }
     }
 
-    for (var j = 0; j < num; j++) {
+    for (let j = 0; j < num; j++) {
       this.threading.push(this.threading[this.threading.length - 1])
 
-      for (var i = 0; i < this.threadingColours.length; i++) {
-        var elem = this.threadingColours[i][this.threadingColours[i].length - 1]
+      for (let i = 0; i < this.threadingColours.length; i++) {
+        let elem = this.threadingColours[i][this.threadingColours[i].length - 1]
         this.threadingColours[i].push(elem)
       }
     }
   }
 
   removeTabletsRight(num: number): void {
-    for (var i = 0; i < this.picks(); i++) {
+    for (let i = 0; i < this.picks(); i++) {
       this.turning[i] = this.turning[i].slice(
         0,
         Math.max(this.turning[i].length - num, 1)
       )
     }
-    for (var i = 0; i < this.holes(); i++) {
+    for (let i = 0; i < this.holes(); i++) {
       this.threadingColours[i] = this.threadingColours[i].slice(
         0,
         Math.max(this.threadingColours[i].length - num, 1)
@@ -147,29 +148,29 @@ class TDDDraft {
   }
 
   addTabletsLeft(num: number): void {
-    for (var i = 0; i < this.picks(); i++) {
-      for (var j = 0; j < num; j++) {
+    for (let i = 0; i < this.picks(); i++) {
+      for (let j = 0; j < num; j++) {
         this.turning[i].unshift(this.turning[i][0])
       }
     }
 
-    for (var j = 0; j < num; j++) {
+    for (let j = 0; j < num; j++) {
       this.threading.unshift(this.threading[0])
 
-      for (var i = 0; i < this.threadingColours.length; i++) {
+      for (let i = 0; i < this.threadingColours.length; i++) {
         this.threadingColours[i].unshift(this.threadingColours[i][0])
       }
     }
   }
 
   removeTabletsLeft(num: number): void {
-    for (var i = 0; i < this.picks(); i++) {
+    for (let i = 0; i < this.picks(); i++) {
       this.turning[i] = this.turning[i].slice(
         Math.min(num, this.turning[i].length - 1),
         this.turning[i].length
       )
     }
-    for (var i = 0; i < this.holes(); i++) {
+    for (let i = 0; i < this.holes(); i++) {
       this.threadingColours[i] = this.threadingColours[i].slice(
         Math.min(num, this.threadingColours[i].length - 1),
         this.threadingColours[i].length
@@ -204,8 +205,8 @@ class TDDDraft {
   }
 
   reverse(tablet, pick): void {
-    for (var i = 0; i < this.picks() - pick; i++) {
-      var a = this.turning[i][tablet]
+    for (let i = 0; i < this.picks() - pick; i++) {
+      let a = this.turning[i][tablet]
       if (a == '\\') {
         this.turning[i][tablet] = '/'
       } else if (a == '/') {
@@ -227,7 +228,7 @@ class TDDDraft {
   }
 
   threadColour(tablet, hole): any {
-    var c = this.threadingColours[hole][tablet]
+    let c = this.threadingColours[hole][tablet]
     if (c != ' ') return this.palette[c]
     else return undefined
   }
@@ -267,24 +268,24 @@ class TDDDraft {
   }
 
   clearTurning(): void {
-    for (var i = 0; i < this.tablets(); i++) {
-      var val = '\\'
+    for (let i = 0; i < this.tablets(); i++) {
+      let val = '\\'
       if (this.threading[i] == 'S') {
         val = '/'
       }
-      for (var j = 0; j < this.picks(); j++) {
+      for (let j = 0; j < this.picks(); j++) {
         this.turning[j][i] = val
       }
     }
   }
 
   describePick(num: number): string {
-    var desc = ''
-    var dir = 'F'
-    var n = 0
+    let desc = ''
+    let dir = 'F'
+    let n = 0
 
-    for (var i = 0; i < this.tablets(); i++) {
-      var new_dir: string
+    for (let i = 0; i < this.tablets(); i++) {
+      let new_dir: string
       if (
         (this.turning[this.picks() - 1 - num][i] == '\\') ==
         (this.threading[i] == 'Z')
@@ -319,22 +320,22 @@ class TDDDraft {
   }
 
   describeHole(x, y) {
-    var c = this.threadColour(x, y)
+    let c = this.threadColour(x, y)
     if (c == undefined) {
       return 'Empty'
     } else {
-      var n = ntc.name(c.getCSSHexadecimalRGB())
-      return ' (' + c.getCSSHexadecimalRGB() + ')'
+      const name = NameThatColor.getColorName(c.getCSSHexadecimalRGB)
+      return name + ' (' + c.getCSSHexadecimalRGB() + ')'
     }
   }
 }
 
 function TDDDraftFromString(raw: string): TDDDraft {
-  var r = new TDDDraft()
-  var lines = raw.split(/\r?\n/)
+  let r = new TDDDraft()
+  let lines = raw.split(/\r?\n/)
 
   // Read the header
-  var match = lines.shift().match(/^#\s*tdd\s+v(\d+)\.(\d+)\s*$/)
+  let match = lines.shift().match(/^#\s*tdd\s+v(\d+)\.(\d+)\s*$/)
   if (!match) throw 'Not a valid tdd file'
 
   if (
@@ -352,7 +353,7 @@ function TDDDraftFromString(raw: string): TDDDraft {
   }
 
   // Discard empty lines
-  var line = lines.shift()
+  let line = lines.shift()
   while (line.match(/^(#.*)?\s*$/)) {
     line = lines.shift()
   }
@@ -360,7 +361,7 @@ function TDDDraftFromString(raw: string): TDDDraft {
   // Read the turning diagram
   r.turning = []
   while (!line.match(/^\s*$/)) {
-    var row = []
+    let row = []
     for (let c of line) {
       if (c == '\\') row.push('\\')
       else row.push('/')
@@ -371,7 +372,7 @@ function TDDDraftFromString(raw: string): TDDDraft {
   }
 
   // Discard empty lines
-  var line = lines.shift()
+  line = lines.shift()
   while (line.match(/^(#.*)?$/)) {
     line = lines.shift()
   }
@@ -385,7 +386,7 @@ function TDDDraftFromString(raw: string): TDDDraft {
         r.threading.push(c)
       }
     } else {
-      var row = []
+      let row = []
       for (let c of line) {
         row.push(c)
       }
@@ -396,14 +397,14 @@ function TDDDraftFromString(raw: string): TDDDraft {
   }
 
   // Discard empty lines
-  var line = lines.shift()
+  line = lines.shift()
   while (line.match(/^(#.*)?\s*$/)) {
     line = lines.shift()
   }
 
   // Read the palette
   while (true) {
-    var match = line.match(
+    let match = line.match(
       /^\s*(\w)\s*-\s*#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})\s*$/
     )
     if (!match) {

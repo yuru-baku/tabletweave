@@ -1,157 +1,204 @@
 // The main script for the draft designer
 import '../sass_style/style.scss'
 import { saveAs } from 'file-saver'
-import * as Cookies from 'js-cookie'
+import { svg_to_blob, svg_to_img } from './fmt/svg_to_img'
 import { TDDDraft, TDDDraftFromString } from './fmt/tdd'
 import $ from 'jquery'
 import { TDDSVGView } from './fmt/TDDSVGView'
 import { RGBColour } from './fmt/Colour'
 import { json_to_tdd } from './fmt/json_to_tdd'
 
-var draft = new TDDDraft()
-var view = new TDDSVGView()
-var repeat = new TDDSVGView()
-var fgcol = -1
-
+let draft = new TDDDraft()
+let view = new TDDSVGView()
+let repeat = new TDDSVGView()
+let fgcol = -1
 
 function control_vals() {
-  var accordion = {}
+  let accordion = {}
   $('.accordion').each(function () {
-    var id = $(this).parent().attr('id')
-    var active = $(this).hasClass('active')
+    let id = $(this).parent().attr('id')
+    let active = $(this).hasClass('active')
     accordion[id] = active
   })
 
   return {
-    addright: $('#addright').prop('checked'),
-    lockdraft: $('#lockdraft').prop('checked'),
+    addright: isChecked('#addright'),
+    lockdraft: isChecked('#lockdraft'),
     fgcol: fgcol,
-    scale: $('#scalecontrols .readout').val(),
-    rscale: $('#rscalecontrols .readout').val(),
-    showtext: $('#showtext').prop('checked'),
-    showgrid: $('#showgrid').prop('checked'),
-    showovals: $('#showovals').prop('checked'),
-    showsquares: $('#showsquares').prop('checked'),
-    showtwist: $('#showtwist').prop('checked'),
-    showupper: $('#showupper').prop('checked'),
-    showlower: $('#showlower').prop('checked'),
-    showreversal: $('#showreversal').prop('checked'),
-    labelholescw: $('#labelholescw').prop('checked'),
-    invertsz: $('#invertsz').prop('checked'),
-    grey_saturation: $('#GREYSLIDER').val(),
-    showhruler: $('#showhruler').prop('checked'),
-    showvruler: $('#showvruler').prop('checked'),
-    hruler: $('#hruler .readout').val(),
-    vruler: $('#vruler .readout').val(),
-    export_width: $('#export_width').val(),
-    showrepeats: $('#showrepeats').prop('checked'),
-    repeatstart: $('#repeatstart .readout').val(),
-    repeatend: $('#repeatend .readout').val(),
-    numrepeats: $('#numrepeats .readout').val(),
+    scale: getValue('#scalecontrols .readout'),
+    rscale: getValue('#rscalecontrols .readout'),
+    showtext: isChecked('#showtext'),
+    showgrid: isChecked('#showgrid'),
+    showovals: isChecked('#showovals'),
+    showsquares: isChecked('#showsquares'),
+    showtwist: isChecked('#showtwist'),
+    showupper: isChecked('#showupper'),
+    showlower: isChecked('#showlower'),
+    showreversal: isChecked('#showreversal'),
+    labelholescw: isChecked('#labelholescw'),
+    invertsz: isChecked('#invertsz'),
+    grey_saturation: isChecked('#GREYSLIDER'),
+    showhruler: isChecked('#showhruler'),
+    showvruler: isChecked('#showvruler'),
+    hruler: getValue('#hruler .readout'),
+    vruler: getValue('#vruler .readout'),
+    export_width: getValue('#export_width'),
+    showrepeats: isChecked('#showrepeats'),
+    repeatstart: getValue('#repeatstart .readout'),
+    repeatend: getValue('#repeatend .readout'),
+    numrepeats: getValue('#numrepeats .readout'),
     accordion: accordion,
   }
 }
 
-function saveToLocal() {
+/**
+ *
+ * @param htmlQuery Query for the CheckBox to be queried
+ * @returns weather the CheckBox is checked.
+ */
+function isChecked(htmlQuery: string): boolean {
+  const element = document.querySelector(htmlQuery) as HTMLInputElement
+  return element.checked
+}
+
+/**
+ *
+ * @param htmlQuery Query for the CheckBox to be queried
+ * @returns weather the CheckBox is checked.
+ */
+function setChecked(htmlQuery: string, isChecked: boolean): void {
+  let element = document.querySelector(htmlQuery) as HTMLInputElement
+  element.checked = isChecked
+}
+
+/**
+ *
+ * @param htmlQuery Query for the Input to be queried
+ * @returns value of the input.
+ */
+function getValue(htmlQuery: string): any {
+  const element = document.querySelector(htmlQuery)
+  return (element as HTMLInputElement)?.value
+}
+
+function setValue(htmlQuery: string, value: any): void {
+  let element = document.querySelector(htmlQuery) as HTMLInputElement
+  element.value = value
+}
+
+function saveToLocal(): void {
   localStorage.setItem('tdd-controls', JSON.stringify(control_vals()))
   localStorage.setItem('tdd-draft', draft.toString())
 }
 
-function loadFromLocal() {
-  var local_controls = localStorage.getItem('tdd-controls')
-  var local_draft = localStorage.getItem('tdd-draft')
+function loadFromLocal(): void {
+  let local_controls = localStorage.getItem('tdd-controls')
+  let local_draft = localStorage.getItem('tdd-draft')
 
-  var controls = local_controls != undefined ? JSON.parse(local_controls) : {}
+  let controls = local_controls != undefined ? JSON.parse(local_controls) : {}
 
   fgcol = controls.fgcol != undefined ? controls.fgcol : -1
 
-  $('#scalecontrols .readout').val(
+  setValue(
+    '#scalecontrols .readout',
     controls.scale != undefined ? controls.scale : 0
   )
-  $('#rscalecontrols .readout').val(
+  setValue(
+    '#rscalecontrols .readout',
     controls.rscale != undefined ? controls.rscale : 0
   )
-  $('#addright').prop(
-    'checked',
+  setChecked(
+    '#addright',
     controls.addright != undefined ? controls.addright : true
   )
-  $('#lockdraft').prop(
-    'checked',
+  setChecked(
+    '#lockdraft',
     controls.lockdraft != undefined ? controls.lockdraft : false
   )
-  $('#showovals').prop(
-    'checked',
+  setChecked(
+    '#showovals',
     controls.showovals != undefined ? controls.showovals : true
   )
-  $('#showsquares').prop(
-    'checked',
+  setChecked(
+    '#showsquares',
     controls.showsquares != undefined ? controls.showsquares : false
   )
-  $('#showtwist').prop(
-    'checked',
+  setChecked(
+    '#showtwist',
     controls.showtwist != undefined ? controls.showtwist : true
   )
-  $('#showtext').prop(
-    'checked',
+  setChecked(
+    '#showtext',
     controls.showtext != undefined ? controls.showtext : false
   )
-  $('#showgrid').prop(
-    'checked',
+  setChecked(
+    '#showgrid',
     controls.showgrid != undefined ? controls.showgrid : true
   )
-  $('#showupper').prop(
-    'checked',
+  setChecked(
+    '#showupper',
     controls.showupper != undefined ? controls.showupper : true
   )
-  $('#showlower').prop(
-    'checked',
+  setChecked(
+    '#showlower',
     controls.showlower != undefined ? controls.showlower : true
   )
-  $('#showreversal').prop(
-    'checked',
+  setChecked(
+    '#showreversal',
     controls.showreversal != undefined ? controls.showreversal : true
   )
-  $('#GREYSLIDER').val(
+  setValue(
+    '#GREYSLIDER',
     controls.grey_saturation != undefined ? controls.grey_saturation : 144
   )
-  $('#labelholescw').prop(
-    'checked',
+  setChecked(
+    '#labelholescw',
     controls.labelholescw != undefined ? controls.labelholescw : true
   )
-  $('#invertsz').prop(
-    'checked',
+  setChecked(
+    '#invertsz',
     controls.invertsz != undefined ? controls.invertsz : false
   )
-  $('#showhruler').prop(
-    'checked',
+  setChecked(
+    '#showhruler',
     controls.showhruler != undefined ? controls.showhruler : true
   )
-  $('#showvruler').prop(
-    'checked',
+  setChecked(
+    '#showvruler',
     controls.showvruler != undefined ? controls.showvruler : true
   )
-  $('#hruler .readout').val(controls.hruler != undefined ? controls.hruler : 0)
-  $('#vruler .readout').val(controls.vruler != undefined ? controls.vruler : 0)
-  $('#export_width').val(
+  setValue(
+    '#hruler .readout',
+    controls.hruler != undefined ? controls.hruler : 0
+  )
+  setValue(
+    '#vruler .readout',
+    controls.vruler != undefined ? controls.vruler : 0
+  )
+  setValue(
+    '#export_width',
     controls.export_width != undefined ? controls.export_width : 1920
   )
-  $('#showrepeats').prop(
-    'checked',
+  setChecked(
+    '#showrepeats',
     controls.showrepeats != undefined ? controls.showrepeats : false
   )
-  $('#repeatstart .readout').val(
+  setValue(
+    '#repeatstart .readout',
     controls.repeatstart != undefined ? controls.repeatstart : 1
   )
-  $('#repeatend .readout').val(
+  setValue(
+    '#repeatend .readout',
     controls.repeatend != undefined ? controls.repeatend : 1
   )
-  $('#numrepeats .readout').val(
+  setValue(
+    '#numrepeats .readout',
     controls.numrepeats != undefined ? controls.numrepeats : 1
   )
 
   if (controls.accordion) {
     for (const [key, value] of Object.entries(controls.accordion)) {
-      var but = $('#' + key + ' .accordion')
+      let but = $('#' + key + ' .accordion')
       if (value) {
         but.addClass('active')
       } else {
@@ -165,11 +212,11 @@ function loadFromLocal() {
   }
 }
 
-function updateDraft() {
-  var picks = parseInt(<string>$('#mainrowcontrols .readout').val())
-  var holes = parseInt(<string>$('#lowrowcontrols .readout').val())
-  var tablets = parseInt(<string>$('#colcontrols .readout').val())
-  var addright = $('#addright').prop('checked')
+function updateDraft(): void {
+  let picks = getValue('#mainrowcontrols .readout')
+  let holes = getValue('#lowrowcontrols .readout')
+  let tablets = getValue('#colcontrols .readout')
+  let addright = isChecked('#addright')
 
   if (picks < draft.picks()) {
     draft.removePicks(draft.picks() - picks)
@@ -197,55 +244,49 @@ function updateDraft() {
     }
   }
 
-  if (<number>$('#hruler .readout').val() > draft.picks() + 1) {
-    $('#hruler .readout').val(draft.picks() + 1)
-  } else if (<number>$('#hruler .readout').val() < -draft.holes()) {
-    $('#hruler .readout').val(-draft.holes())
+  if (<number>getValue('#hruler .readout') > draft.picks() + 1) {
+    setValue('#hruler .readout', draft.picks() + 1)
+  } else if (<number>getValue('#hruler .readout') < -draft.holes()) {
+    setValue('#hruler .readout', -draft.holes())
   }
 
-  if (<number>$('#vruler .readout').val() > draft.tablets() + 1) {
-    $('#vruler .readout').val(draft.tablets() + 1)
+  if (<number>getValue('#vruler .readout') > draft.tablets() + 1) {
+    setValue('#vruler .readout', draft.tablets() + 1)
   }
 
-  if (<number>$('#repeatstart .readout').val() > draft.picks()) {
-    $('#repeatstart .readout').val(draft.picks())
+  if (<number>getValue('#repeatstart .readout') > draft.picks()) {
+    setValue('#repeatstart .readout', draft.picks())
   }
 
-  if (<number>$('#repeatend .readout').val() > draft.picks()) {
-    $('#repeatend .readout').val(draft.picks())
+  if (<number>getValue('#repeatend .readout') > draft.picks()) {
+    setValue('#repeatend .readout', draft.picks())
   }
 
   saveToLocal()
 }
 
-function redraw() {
-  var scale = Math.pow(
-    2,
-    parseInt(<string>$('#scalecontrols .readout').val()) / 10
-  )
-  var rscale = Math.pow(
-    2,
-    parseInt(<string>$('#rscalecontrols .readout').val()) / 10
-  )
+function redraw(): void {
+  let scale = Math.pow(2, getValue('#scalecontrols .readout') / 10)
+  let rscale = Math.pow(2, getValue('#rscalecontrols .readout') / 10)
 
   view.conform(draft)
-  if ($('#showrepeats').prop('checked')) {
+  if (isChecked('#showrepeats')) {
     repeat.conform(draft)
   }
 
-  var bbox = $('#draftcanvas svg')[0].getBoundingClientRect()
+  let bbox = $('#draftcanvas svg')[0].getBoundingClientRect()
   $('#draftcanvas svg').width(bbox.width * scale)
   $('#draftcanvas svg').height(bbox.height * scale)
 
-  var bot = $('#mainsection').position().top + bbox.height * scale
-  var right = $('#mainsection').position().left + bbox.width * scale
+  let bot = $('#mainsection').position().top + bbox.height * scale
+  let right = $('#mainsection').position().left + bbox.width * scale
 
-  var i
+  let i
   for (i = 0; i <= 12; i++) {
     $('#NUM' + i).text(draft.threadCount(i - 1))
   }
 
-  if ($('#showrepeats').prop('checked')) {
+  if (isChecked('#showrepeats')) {
     $('#repeatsection').show()
     $('#repeatsection').css('left', right + 10)
   } else {
@@ -254,21 +295,24 @@ function redraw() {
 
   $('#threadinginstructions').text('')
 
-  if ($('#showtext').prop('checked')) {
-    var invertsz = $('#invertsz').prop('checked')
+  if (isChecked('#showtext')) {
+    let invertsz = isChecked('#invertsz')
     for (i = 0; i < draft.tablets(); i++) {
       $('#threadinginstructions').append(
         '<li class="instruction">' +
-        draft.describeTablet(i, invertsz) +
-        ' (' +
-        ($('#labelholescw').prop('checked') ? '&#x21BB;' : '&#x21BA;') +
-        ')</li>'
+          draft.describeTablet(i, invertsz) +
+          ' (' +
+          (isChecked('#labelholescw') ? '&#x21BB;' : '&#x21BA;') +
+          ')</li>'
       )
       $('#threadinginstructions li').last().append('<ol type="A"></ol>')
-      var ol = $('#threadinginstructions li').last().children().last()
-      for (var j = 0; j < draft.holes(); j++) {
-        if ($('#labelholescw').prop('checked')) {
-          if ($('#showhruler').val() && $('#hruler .readout').val() == -j - 1) {
+      let ol = $('#threadinginstructions li').last().children().last()
+      for (let j = 0; j < draft.holes(); j++) {
+        if (isChecked('#labelholescw')) {
+          if (
+            getValue('#showhruler') &&
+            getValue('#hruler .readout') == -j - 1
+          ) {
             ol.append(
               '<li><b>' + draft.describeHole(i, j) + ' (selected)</b></li>'
             )
@@ -277,13 +321,13 @@ function redraw() {
           }
         } else {
           if (
-            $('#showhruler').val() &&
-            $('#hruler .readout').val() == j - draft.holes()
+            getValue('#showhruler') &&
+            getValue('#hruler .readout') == j - draft.holes()
           ) {
             ol.append(
               '<li><b>' +
-              draft.describeHole(i, draft.holes() - j - 1) +
-              ' (selected)</b></li>'
+                draft.describeHole(i, draft.holes() - j - 1) +
+                ' (selected)</b></li>'
             )
           } else {
             ol.append(
@@ -296,11 +340,11 @@ function redraw() {
 
     $('#turninginstructions').text('')
     for (i = 0; i < draft.picks(); i++) {
-      if ($('#showhruler').val() && $('#hruler .readout').val() == i + 1) {
+      if (getValue('#showhruler') && getValue('#hruler .readout') == i + 1) {
         $('#turninginstructions').append(
           '<li class="instruction"><b>' +
-          draft.describePick(i) +
-          ' (selected)</b></li>'
+            draft.describePick(i) +
+            ' (selected)</b></li>'
         )
       } else {
         $('#turninginstructions').append(
@@ -321,7 +365,7 @@ function redraw() {
     $('#textinstructions').hide()
   }
 
-  if ($('#showrepeats').prop('checked')) {
+  if (isChecked('#showrepeats')) {
     bbox = $('#repeatcanvas svg')[0].getBoundingClientRect()
 
     $('#repeatcanvas svg').width(bbox.width * rscale)
@@ -337,15 +381,14 @@ function redraw() {
   $('#copyright').css('botton', undefined)
 }
 
-function redrawControls() {
+function redrawControls(): void {
   if (fgcol == -1) {
     $('#EMPTYBOX').addClass('selected')
   } else {
     $('#EMPTYBOX').removeClass('selected')
   }
 
-  var i
-  for (i = 0; i < 12; i++) {
+  for (let i = 0; i < 12; i++) {
     $('#BOX' + (i + 1)).css(
       'background-color',
       draft.colour(i).getCSSHexadecimalRGB()
@@ -358,13 +401,13 @@ function redrawControls() {
   }
 
   if (fgcol != -1) {
-    var c = draft.colour(fgcol).getIntegerRGB()
-    $('#REDVAL').val(c.r)
-    $('#REDSLIDE').val(c.r)
-    $('#GREENVAL').val(c.g)
-    $('#GREENSLIDE').val(c.g)
-    $('#BLUEVAL').val(c.b)
-    $('#BLUESLIDE').val(c.b)
+    let c = draft.colour(fgcol).getIntegerRGB()
+    setValue('#REDVAL', c.r)
+    setValue('#REDSLIDE', c.r)
+    setValue('#GREENVAL', c.g)
+    setValue('#GREENSLIDE', c.g)
+    setValue('#BLUEVAL', c.b)
+    setValue('#BLUESLIDE', c.b)
 
     $('#REDVAL').prop('disabled', false)
     $('#GREENVAL').prop('disabled', false)
@@ -372,16 +415,14 @@ function redrawControls() {
     $('#REDSLIDE').prop('disabled', false)
     $('#GREENSLIDE').prop('disabled', false)
     $('#BLUESLIDE').prop('disabled', false)
-    $('#colourname').text(
-      "BLURP"
-    )
+    $('#colourname').text('BLURP')
   } else {
-    $('#REDVAL').val(0)
-    $('#REDSLIDE').val(0)
-    $('#GREENVAL').val(0)
-    $('#GREENSLIDE').val(0)
-    $('#BLUEVAL').val(0)
-    $('#BLUESLIDE').val(0)
+    setValue('#REDVAL', 0)
+    setValue('#REDSLIDE', 0)
+    setValue('#GREENVAL', 0)
+    setValue('#GREENSLIDE', 0)
+    setValue('#BLUEVAL', 0)
+    setValue('#BLUESLIDE', 0)
 
     $('#REDVAL').prop('disabled', true)
     $('#GREENVAL').prop('disabled', true)
@@ -394,15 +435,15 @@ function redrawControls() {
   }
 }
 
-function draftClick(e) {
-  if (!$('#lockdraft').prop('checked')) {
+function draftClick(e): void {
+  if (!isChecked('#lockdraft')) {
     const pt = this.createSVGPoint()
     pt.x = e.clientX
     pt.y = e.clientY
     const svgP = pt.matrixTransform(this.getScreenCTM().inverse())
-    var tablet = view.svg_coord_to_tablet(svgP.x, view, draft)
-    var pick = view.svg_coord_to_pick(svgP.y, draft)
-    var hole = view.svg_coord_to_hole(svgP.y, draft)
+    let tablet = view.svg_coord_to_tablet(svgP.x, view, draft)
+    let pick = view.svg_coord_to_pick(svgP.y, draft)
+    let hole = view.svg_coord_to_hole(svgP.y, draft)
 
     if (tablet >= 0) {
       if (pick >= 0) {
@@ -426,8 +467,8 @@ function setupNumberInput(
   callback,
   increment = 1,
   wrap = false
-) {
-  var validate = function (new_val, min_val, max_val, inc = false) {
+): void {
+  let validate = function (new_val, min_val, max_val, inc = false) {
     if (typeof min_val == 'function') {
       min_val = min_val()
     }
@@ -445,122 +486,129 @@ function setupNumberInput(
         new_val = 1
       }
     } else {
-      var mod = max_val + 1 - min_val
+      let mod = max_val + 1 - min_val
       new_val = min_val + ((((new_val - min_val) % mod) + mod) % mod)
     }
     return new_val
   }
-  $('#' + id + ' .readout').change(function () {
-    var new_val = validate(
-      Math.round(<number>$('#' + id + ' .readout').val() / increment) *
-      increment,
-      min_val,
-      max_val
-    )
-    $('#' + id + ' .readout').val(new_val)
-    callback()
-  })
-  $('#' + id + ' .minus').click(function () {
-    var new_val = validate(
-      (Math.round(<number>$('#' + id + ' .readout').val() / increment) - 1) *
-      increment,
-      min_val,
-      max_val
-    )
-    $('#' + id + ' .readout').val(new_val)
-    callback()
-  })
-  $('#' + id + ' .plus').click(function () {
-    var new_val = validate(
-      (Math.round(<number>$('#' + id + ' .readout').val() / increment) + 1) *
-      increment,
-      min_val,
-      max_val,
-      true
-    )
-    $('#' + id + ' .readout').val(new_val)
-    callback()
-  })
+  document
+    .getElementById('#' + id + ' .readout')
+    ?.addEventListener('change', function () {
+      let new_val = validate(
+        Math.round(<number>getValue('#' + id + ' .readout') / increment) *
+          increment,
+        min_val,
+        max_val
+      )
+      setValue('#' + id + ' .readout', new_val)
+      callback()
+    })
+  document
+    .getElementById('#' + id + ' .minus')
+    ?.addEventListener('click', function () {
+      let new_val = validate(
+        (Math.round(<number>getValue('#' + id + ' .readout') / increment) - 1) *
+          increment,
+        min_val,
+        max_val
+      )
+      setValue('#' + id + ' .readout', new_val)
+      callback()
+    })
+  document
+    .getElementById('#' + id + ' .plus')
+    ?.addEventListener('click', function () {
+      let new_val = validate(
+        (Math.round(<number>getValue('#' + id + ' .readout') / increment) + 1) *
+          increment,
+        min_val,
+        max_val,
+        true
+      )
+      setValue('#' + id + ' .readout', new_val)
+      callback()
+    })
 
-  $('#' + id + ' .readout').val(
+  setValue(
+    '#' + id + ' .readout',
     validate(
-      Math.round(<number>$('#' + id + ' .readout').val() / increment) *
-      increment,
+      Math.round(<number>getValue('#' + id + ' .readout') / increment) *
+        increment,
       min_val,
       max_val
     )
   )
 }
 
-function updateRed(r) {
-  var c = draft.colour(fgcol).getIntegerRGB()
+function updateRed(r): void {
+  let c = draft.colour(fgcol).getIntegerRGB()
   draft.setColour(fgcol, new RGBColour(r, c.g, c.b))
   saveToLocal()
 }
 
-function updateGreen(g) {
-  var c = draft.colour(fgcol).getIntegerRGB()
+function updateGreen(g): void {
+  let c = draft.colour(fgcol).getIntegerRGB()
   draft.setColour(fgcol, new RGBColour(c.r, g, c.b))
   saveToLocal()
 }
 
-function updateBlue(b) {
-  var c = draft.colour(fgcol).getIntegerRGB()
+function updateBlue(b): void {
+  let c = draft.colour(fgcol).getIntegerRGB()
   draft.setColour(fgcol, new RGBColour(c.r, c.g, b))
   saveToLocal()
 }
 
-function updateGrey(g) {
+function updateGrey(g): void {
   if (g > 0xff) g = 0xff
   if (g < 0) g = 0
   view.greySaturation(0x100 - g)
-  $('#GREYSLIDER').val(g)
-  $('#GREYVAL').val(g)
+  setValue('#GREYSLIDER', g)
+  setValue('#GREYVAL', g)
   saveToLocal()
 }
 
-function setControlsFromDraft() {
-  $('#mainrowcontrols .readout').val(draft.picks())
-  $('#lowrowcontrols .readout').val(draft.holes())
-  $('#colcontrols .readout').val(draft.tablets())
-  $('#draftname .readout').val(draft.name)
+function setControlsFromDraft(): void {
+  setValue('#mainrowcontrols .readout', draft.picks())
+  setValue('#lowrowcontrols .readout', draft.holes())
+  setValue('#colcontrols .readout', draft.tablets())
+  setValue('#draftname .readout', draft.name)
 
-  if (<number>$('#hruler .readout').val() > draft.picks() + 1) {
-    $('#hruler .readout').val(draft.picks() + 1)
-  } else if (<number>$('#hruler .readout').val() < -draft.holes()) {
-    $('#hruler .readout').val(-draft.holes())
+  if (<number>getValue('#hruler .readout') > draft.picks() + 1) {
+    setValue('#hruler .readout', draft.picks() + 1)
+  } else if (<number>getValue('#hruler .readout') < -draft.holes()) {
+    setValue('#hruler .readout', -draft.holes())
   }
   view.hRuler(
-    $('#showhruler').prop('checked') ? $('#hruler .readout').val() : undefined
+    isChecked('#showhruler') ? getValue('#hruler .readout') : undefined
   )
 
-  if (<number>$('#vruler .readout').val() > draft.tablets() + 1) {
-    $('#vruler .readout').val(draft.tablets() + 1)
+  if (<number>getValue('#vruler .readout') > draft.tablets() + 1) {
+    setValue('#vruler .readout', draft.tablets() + 1)
   }
   view.vRuler(
-    $('#showvruler').prop('checked') ? $('#vruler .readout').val() : undefined
+    isChecked('#showvruler') ? getValue('#vruler .readout') : undefined
   )
 
-  if (<number>$('#repeatstart .readout').val() > draft.picks()) {
-    $('#repeatstart .readout').val(draft.picks())
+  if (<number>getValue('#repeatstart .readout') > draft.picks()) {
+    setValue('#repeatstart .readout', draft.picks())
     repeat.startPick(draft.picks())
   }
 
-  if (<number>$('#repeatend .readout').val() > draft.picks()) {
-    $('#repeatend .readout').val(draft.picks())
+  if (<number>getValue('#repeatend .readout') > draft.picks()) {
+    setValue('#repeatend .readout', draft.picks())
     repeat.endPick(draft.picks())
   }
 }
 
 function loadFile() {
-  var files = ($('#fileio #load')[0] as HTMLInputElement).files
+  let files = ($('#fileio #load')[0] as HTMLInputElement).files
   if (files.length > 0) {
-    var reader = new FileReader()
+    let reader = new FileReader()
 
     reader.onload = (function (is_tdd) {
       return function (e) {
         try {
-          var data = e.target.result
+          let data = e.target.result
 
           if (!is_tdd && (<string>data).substring(0, 5) === '# tdd') {
             is_tdd = true
@@ -589,13 +637,13 @@ function loadFile() {
 
 function saveFile() {
   try {
-    var filename = ''
+    let filename = ''
     if (draft.name != '') {
       filename = draft.name + '.tdd'
     } else {
       filename = 'draft.tdd'
     }
-    var blob = new Blob([draft.toString()], {
+    let blob = new Blob([draft.toString()], {
       type: 'text/plain;charset=utf-8',
     })
     saveAs(blob, filename)
@@ -608,7 +656,7 @@ function saveFile() {
 function reset() {
   draft = new TDDDraft()
 
-  $('#scalecontrols .readout').val(0)
+  setValue('#scalecontrols .readout', 0)
   $('#lockdraft').prop('checked', false)
   $('#showovals').prop('checked', true)
   $('#showsquares').prop('checked', false)
@@ -618,7 +666,7 @@ function reset() {
   $('#showreversal').prop('checked', true)
   $('#showtext').prop('checked', false)
   $('#showgrid').prop('checked', true)
-  $('#GREYSLIDER').val(144)
+  setValue('#GREYSLIDER', 144)
   $('#addright').prop('checked', true)
   $('#labelholescw').prop('checked', true)
   $('#invertsz').prop('checked', false)
@@ -626,12 +674,12 @@ function reset() {
   $('#showhruler').prop('checked', false)
   $('#showvruler').prop('checked', false)
 
-  $('#export_width').val(1920)
+  setValue('#export_width', 1920)
 
   $('#showrepeats').prop('checked', false)
-  $('#repeatstart .readout').val(1)
-  $('#repeatend .readout').val(1)
-  $('#numrepeats .readout').val(1)
+  setValue('#repeatstart .readout', 1)
+  setValue('#repeatend .readout', 1)
+  setValue('#numrepeats .readout', 1)
 
   saveToLocal()
   setControlsFromDraft()
@@ -640,24 +688,22 @@ function reset() {
 }
 
 function textDescriptionString() {
-  var desc = ' ' + draft.name
+  let desc = ' ' + draft.name
   desc += '\n' + '='.repeat(draft.name.length + 2)
 
   desc += '\n\nThreading:'
-  var invertsz = $('#invertsz').prop('checked')
-  for (var i = 0; i < draft.tablets(); i++) {
+  let invertsz = isChecked('#invertsz')
+  for (let i = 0; i < draft.tablets(); i++) {
     desc +=
       '\n * ' +
       draft.describeTablet(i, invertsz) +
       ' (' +
-      String.fromCharCode(
-        $('#labelholescw').prop('checked') ? 0x21bb : 0x21ba
-      ) +
+      String.fromCharCode(isChecked('#labelholescw') ? 0x21bb : 0x21ba) +
       ')'
-    for (var j = 0; j < draft.holes(); j++) {
-      var char = String.fromCharCode('A'.charCodeAt(0) + j)
+    for (let j = 0; j < draft.holes(); j++) {
+      let char = String.fromCharCode('A'.charCodeAt(0) + j)
       desc += '\n    ' + char + ': '
-      if ($('#labelholescw').prop('checked')) {
+      if (isChecked('#labelholescw')) {
         desc += draft.describeHole(i, j)
       } else {
         desc += draft.describeHole(i, draft.holes() - j - 1)
@@ -665,7 +711,7 @@ function textDescriptionString() {
     }
   }
   desc += '\n\nTurning:'
-  for (i = 0; i < draft.picks(); i++) {
+  for (let i = 0; i < draft.picks(); i++) {
     desc += '\n ' + (i + 1) + '. ' + draft.describePick(i)
   }
   desc += '\n'
@@ -673,7 +719,7 @@ function textDescriptionString() {
 }
 
 function exportTextDescription() {
-  var filename: string
+  let filename: string
   if (draft.name != '') {
     filename = draft.name + '.txt'
   } else {
@@ -683,11 +729,11 @@ function exportTextDescription() {
 }
 
 function exportDraft(mimetype, root) {
-  const width = <number>$('#export_width').val()
+  const width = <number>getValue('#export_width')
 
-  var process_blob = function (blob) {
-    var extension
-    var filename
+  let process_blob = function (blob) {
+    let extension
+    let filename
 
     if (mimetype == 'image/jpeg') {
       extension = '.jpg'
@@ -724,11 +770,12 @@ function applyAccordian() {
 }
 
 $(function () {
-
-  $('#draftname .readout').change(function () {
-    draft.name = <string>$('#draftname .readout').val()
-    saveToLocal()
-  })
+  document
+    .getElementById('#draftname .readout')
+    ?.addEventListener('change', function () {
+      draft.name = <string>getValue('#draftname .readout')
+      saveToLocal()
+    })
 
   setupNumberInput('scalecontrols', -100, 100, function () {
     saveToLocal()
@@ -750,12 +797,14 @@ $(function () {
     updateDraft()
     redraw()
   })
-  $('#addright').change(function () {
+  document.getElementById('#addright')?.addEventListener('change', function () {
     saveToLocal()
   })
-  $('#lockdraft').change(function () {
-    saveToLocal()
-  })
+  document
+    .getElementById('#lockdraft')
+    ?.addEventListener('change', function () {
+      saveToLocal()
+    })
 
   setupNumberInput(
     'hruler',
@@ -767,9 +816,7 @@ $(function () {
     },
     function () {
       view.hRuler(
-        $('#showhruler').prop('checked')
-          ? $('#hruler .readout').val()
-          : undefined
+        isChecked('#showhruler') ? getValue('#hruler .readout') : undefined
       )
       saveToLocal()
       redraw()
@@ -785,9 +832,7 @@ $(function () {
     },
     function () {
       view.vRuler(
-        $('#showvruler').prop('checked')
-          ? $('#vruler .readout').val()
-          : undefined
+        isChecked('#showvruler') ? getValue('#vruler .readout') : undefined
       )
       saveToLocal()
       redraw()
@@ -795,80 +840,98 @@ $(function () {
     1,
     true
   )
-  $('#showhruler').change(function () {
-    view.hRuler(
-      $('#showhruler').prop('checked') ? $('#hruler .readout').val() : undefined
-    )
+  document
+    .getElementById('#showhruler')
+    ?.addEventListener('change', function () {
+      view.hRuler(
+        isChecked('#showhruler') ? getValue('#hruler .readout') : undefined
+      )
+      saveToLocal()
+      redraw()
+    })
+  document
+    .getElementById('#showvruler')
+    ?.addEventListener('change', function () {
+      view.vRuler(
+        isChecked('#showvruler') ? getValue('#vruler .readout') : undefined
+      )
+      saveToLocal()
+      redraw()
+    })
+
+  document
+    .getElementById('#showovals')
+    ?.addEventListener('change', function () {
+      view.showOvals(isChecked('#showovals'))
+      saveToLocal()
+      redraw()
+    })
+  document
+    .getElementById('#showsquares')
+    ?.addEventListener('change', function () {
+      view.showSquares(isChecked('#showsquares'))
+      saveToLocal()
+      redraw()
+    })
+  document
+    .getElementById('#showtwist')
+    ?.addEventListener('change', function () {
+      view.showTwist(isChecked('#showtwist'))
+      saveToLocal()
+      redraw()
+    })
+  document
+    .getElementById('#showupper')
+    ?.addEventListener('change', function () {
+      view.showTurning(isChecked('#showupper'))
+      saveToLocal()
+      redraw()
+    })
+  document
+    .getElementById('#showlower')
+    ?.addEventListener('change', function () {
+      view.showThreading(isChecked('#showlower'))
+      saveToLocal()
+      redraw()
+    })
+  document
+    .getElementById('#showreversal')
+    ?.addEventListener('change', function () {
+      view.showReversals(isChecked('#showreversal'))
+      saveToLocal()
+      redraw()
+    })
+  document.getElementById('#showtext')?.addEventListener('change', function () {
     saveToLocal()
     redraw()
   })
-  $('#showvruler').change(function () {
-    view.vRuler(
-      $('#showvruler').prop('checked') ? $('#vruler .readout').val() : undefined
-    )
+  document.getElementById('#showgrid')?.addEventListener('change', function () {
+    view.showGrid(isChecked('#showgrid'))
+    repeat.showGrid(isChecked('#showgrid'))
+    saveToLocal()
+    redraw()
+  })
+  document
+    .getElementById('#labelholescw')
+    ?.addEventListener('change', function () {
+      view.labelHolesCW(isChecked('#labelholescw'))
+      saveToLocal()
+      redraw()
+    })
+  document.getElementById('#invertsz')?.addEventListener('change', function () {
+    view.invertSZ(isChecked('#invertsz'))
     saveToLocal()
     redraw()
   })
 
-  $('#showovals').change(function () {
-    view.showOvals($('#showovals').prop('checked'))
-    saveToLocal()
-    redraw()
-  })
-  $('#showsquares').change(function () {
-    view.showSquares($('#showsquares').prop('checked'))
-    saveToLocal()
-    redraw()
-  })
-  $('#showtwist').change(function () {
-    view.showTwist($('#showtwist').prop('checked'))
-    saveToLocal()
-    redraw()
-  })
-  $('#showupper').change(function () {
-    view.showTurning($('#showupper').prop('checked'))
-    saveToLocal()
-    redraw()
-  })
-  $('#showlower').change(function () {
-    view.showThreading($('#showlower').prop('checked'))
-    saveToLocal()
-    redraw()
-  })
-  $('#showreversal').change(function () {
-    view.showReversals($('#showreversal').prop('checked'))
-    saveToLocal()
-    redraw()
-  })
-  $('#showtext').change(function () {
-    saveToLocal()
-    redraw()
-  })
-  $('#showgrid').change(function () {
-    view.showGrid($('#showgrid').prop('checked'))
-    repeat.showGrid($('#showgrid').prop('checked'))
-    saveToLocal()
-    redraw()
-  })
-  $('#labelholescw').change(function () {
-    view.labelHolesCW($('#labelholescw').prop('checked'))
-    saveToLocal()
-    redraw()
-  })
-  $('#invertsz').change(function () {
-    view.invertSZ($('#invertsz').prop('checked'))
-    saveToLocal()
-    redraw()
-  })
-
-  $('#EMPTYBOX').click(function () {
+  document.getElementById('#EMPTYBOX')?.addEventListener('click', function () {
     fgcol = -1
     saveToLocal()
     redrawControls()
   })
-  var i
+  let i
   for (i = 0; i < 12; i++) {
-    ; (function (i) {
+    ;(function (i) {
       $('#BOX' + (i + 1)).click(function () {
         fgcol = i
         saveToLocal()
@@ -877,18 +940,20 @@ $(function () {
     })(i)
   }
 
-  $('#showrepeats').change(function () {
-    saveToLocal()
-    redraw()
-  })
+  document
+    .getElementById('#showrepeats')
+    ?.addEventListener('change', function () {
+      saveToLocal()
+      redraw()
+    })
   setupNumberInput(
     'repeatstart',
     1,
     function () {
-      return $('#repeatend .readout').val()
+      return getValue('#repeatend .readout')
     },
     function () {
-      repeat.startPick(<number>$('#repeatstart .readout').val())
+      repeat.startPick(<number>getValue('#repeatstart .readout'))
       saveToLocal()
       redraw()
     }
@@ -896,117 +961,145 @@ $(function () {
   setupNumberInput(
     'repeatend',
     function () {
-      return $('#repeatstart .readout').val()
+      return getValue('#repeatstart .readout')
     },
     function () {
       return draft.picks()
     },
     function () {
-      repeat.endPick(<number>$('#repeatend .readout').val())
+      repeat.endPick(<number>getValue('#repeatend .readout'))
       saveToLocal()
       redraw()
     }
   )
   setupNumberInput('numrepeats', 1, undefined, function () {
-    repeat.setRepeats(<number>$('#numrepeats .readout').val())
+    repeat.setRepeats(<number>getValue('#numrepeats .readout'))
     saveToLocal()
     redraw()
   })
 
-  $('#REDVAL').change(function () {
-    updateRed($('#REDVAL').val())
+  document.getElementById('#REDVAL')?.addEventListener('change', function () {
+    updateRed(getValue('#REDVAL'))
     redraw()
     redrawControls()
   })
-  $('#REDSLIDE').change(function () {
-    updateRed($('#REDSLIDE').val())
+  document.getElementById('#REDSLIDE')?.addEventListener('change', function () {
+    updateRed(getValue('#REDSLIDE'))
     redraw()
     redrawControls()
   })
-  $('#GREENVAL').change(function () {
-    updateGreen($('#GREENVAL').val())
+  document.getElementById('#GREENVAL')?.addEventListener('change', function () {
+    updateGreen(getValue('#GREENVAL'))
     redraw()
     redrawControls()
   })
-  $('#GREENSLIDE').change(function () {
-    updateGreen($('#GREENSLIDE').val())
+  document
+    .getElementById('#GREENSLIDE')
+    ?.addEventListener('change', function () {
+      updateGreen(getValue('#GREENSLIDE'))
+      redraw()
+      redrawControls()
+    })
+  document.getElementById('#BLUEVAL')?.addEventListener('change', function () {
+    updateBlue(getValue('#BLUEVAL'))
     redraw()
     redrawControls()
   })
-  $('#BLUEVAL').change(function () {
-    updateBlue($('#BLUEVAL').val())
-    redraw()
-    redrawControls()
-  })
-  $('#BLUESLIDE').change(function () {
-    updateBlue($('#BLUESLIDE').val())
-    redraw()
-    redrawControls()
-  })
+  document
+    .getElementById('#BLUESLIDE')
+    ?.addEventListener('change', function () {
+      updateBlue(getValue('#BLUESLIDE'))
+      redraw()
+      redrawControls()
+    })
 
-  $('#GREYVAL').change(function () {
-    updateGrey($('#GREYVAL').val())
+  document.getElementById('#GREYVAL')?.addEventListener('change', function () {
+    updateGrey(getValue('#GREYVAL'))
     redraw()
   })
-  $('#GREYSLIDER').change(function () {
-    updateGrey($('#GREYSLIDER').val())
-    redraw()
-  })
+  document
+    .getElementById('#GREYSLIDER')
+    ?.addEventListener('change', function () {
+      updateGrey(getValue('#GREYSLIDER'))
+      redraw()
+    })
 
-  $('#fileio #load').change(function () {
-    loadFile()
-    saveToLocal()
-  })
-  $('#fileio #save').click(function () {
-    saveFile()
-  })
+  document
+    .getElementById('#fileio #load')
+    ?.addEventListener('change', function () {
+      loadFile()
+      saveToLocal()
+    })
+  document
+    .getElementById('#fileio #save')
+    ?.addEventListener('click', function () {
+      saveFile()
+    })
 
-  $('#clear').click(function () {
+  document.getElementById('#clear')?.addEventListener('click', function () {
     draft.clearTurning()
     setControlsFromDraft()
     saveToLocal()
     redraw()
     redrawControls()
   })
-  $('#reset').click(function () {
+  document.getElementById('#reset')?.addEventListener('click', function () {
     reset()
   })
-  $('#resetpallette').click(function () {
-    draft.resetPalette()
-    setControlsFromDraft()
-    saveToLocal
-    redraw()
-    redrawControls()
-  })
+  document
+    .getElementById('#resetpallette')
+    ?.addEventListener('click', function () {
+      draft.resetPalette()
+      setControlsFromDraft()
+      saveToLocal
+      redraw()
+      redrawControls()
+    })
 
-  $('#draftexport #svg').click(function () {
-    exportDraft('image/svg+xml', view.root())
-  })
-  $('#draftexport #jpeg').click(function () {
-    exportDraft('image/jpeg', view.root())
-  })
-  $('#draftexport #png').click(function () {
-    exportDraft('image/png', view.root())
-  })
-  $('#draftexport #txt').click(function () {
-    exportTextDescription()
-  })
+  document
+    .getElementById('#draftexport #svg')
+    ?.addEventListener('click', function () {
+      exportDraft('image/svg+xml', view.root())
+    })
+  document
+    .getElementById('#draftexport #jpeg')
+    ?.addEventListener('click', function () {
+      exportDraft('image/jpeg', view.root())
+    })
+  document
+    .getElementById('#draftexport #png')
+    ?.addEventListener('click', function () {
+      exportDraft('image/png', view.root())
+    })
+  document
+    .getElementById('#draftexport #txt')
+    ?.addEventListener('click', function () {
+      exportTextDescription()
+    })
 
-  $('#repeatexport #svg').click(function () {
-    exportDraft('image/svg+xml', repeat.root())
-  })
-  $('#repeatexport #jpeg').click(function () {
-    exportDraft('image/jpeg', repeat.root())
-  })
-  $('#repeatexport #png').click(function () {
-    exportDraft('image/png', repeat.root())
-  })
+  document
+    .getElementById('#repeatexport #svg')
+    ?.addEventListener('click', function () {
+      exportDraft('image/svg+xml', repeat.root())
+    })
+  document
+    .getElementById('#repeatexport #jpeg')
+    ?.addEventListener('click', function () {
+      exportDraft('image/jpeg', repeat.root())
+    })
+  document
+    .getElementById('#repeatexport #png')
+    ?.addEventListener('click', function () {
+      exportDraft('image/png', repeat.root())
+    })
 
-  $('#export_width').change(function () {
-    saveToLocal()
-  })
+  document
+    .getElementById('#export_width')
+    ?.addEventListener('change', function () {
+      saveToLocal()
+    })
 
-  $('.accordion').click(function () {
+  document.getElementById('.accordion')?.addEventListener('click', function () {
     $(this).toggleClass('active')
     applyAccordian()
     saveToLocal()
@@ -1014,24 +1107,24 @@ $(function () {
 
   loadFromLocal()
 
-  view.showGrid($('#showgrid').prop('checked'))
-  view.showOvals($('#showovals').prop('checked'))
-  view.showSquares($('#showsquares').prop('checked'))
-  view.showTwist($('#showtwist').prop('checked'))
-  view.showTurning($('#showupper').prop('checked'))
-  view.showThreading($('#showlower').prop('checked'))
-  view.showReversals($('#showreversal').prop('checked'))
-  view.greySaturation(0x100 - <number>$('#GREYSLIDER').val())
-  view.labelHolesCW($('#labelholescw').prop('checked'))
-  view.invertSZ($('#invertsz').prop('checked'))
+  view.showGrid(isChecked('#showgrid'))
+  view.showOvals(isChecked('#showovals'))
+  view.showSquares(isChecked('#showsquares'))
+  view.showTwist(isChecked('#showtwist'))
+  view.showTurning(isChecked('#showupper'))
+  view.showThreading(isChecked('#showlower'))
+  view.showReversals(isChecked('#showreversal'))
+  view.greySaturation(0x100 - <number>getValue('#GREYSLIDER'))
+  view.labelHolesCW(isChecked('#labelholescw'))
+  view.invertSZ(isChecked('#invertsz'))
   view.hRuler(
-    $('#showhruler').prop('checked') ? $('#hruler .readout').val() : undefined
+    isChecked('#showhruler') ? getValue('#hruler .readout') : undefined
   )
   view.vRuler(
-    $('#showvruler').prop('checked') ? $('#vruler .readout').val() : undefined
+    isChecked('#showvruler') ? getValue('#vruler .readout') : undefined
   )
 
-  repeat.showGrid($('#showgrid').prop('checked'))
+  repeat.showGrid(isChecked('#showgrid'))
   repeat.showOvals(true)
   repeat.showThreading(false)
   repeat.showReversals(false)
@@ -1040,16 +1133,18 @@ $(function () {
   repeat.hRuler(undefined)
   repeat.vRuler(undefined)
 
-  repeat.startPick(<number>$('#repeatstart .readout').val())
-  repeat.endPick(<number>$('#repeatend .readout').val())
-  repeat.setRepeats(<number>$('#numrepeats .readout').val())
+  repeat.startPick(<number>getValue('#repeatstart .readout'))
+  repeat.endPick(<number>getValue('#repeatend .readout'))
+  repeat.setRepeats(<number>getValue('#numrepeats .readout'))
 
   applyAccordian()
 
   setControlsFromDraft()
 
   $('#draftcanvas').append(view.root())
-  $('#draftcanvas svg').click(draftClick)
+  document
+    .getElementById('#draftcanvas svg')
+    ?.addEventListener('click', draftClick)
 
   $('#repeatcanvas').append(repeat.root())
 

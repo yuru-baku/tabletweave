@@ -12,13 +12,13 @@
     <script>
       function saveSvg(svgEl, name) {
         svgEl.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
-        var svgData = svgEl.outerHTML
-        var preface = '<?xml version="1.0" standalone="no"?>\r\n'
-        var svgBlob = new Blob([preface, svgData], {
+        let svgData = svgEl.outerHTML
+        let preface = '<?xml version="1.0" standalone="no"?>\r\n'
+        let svgBlob = new Blob([preface, svgData], {
           type: 'image/svg+xml;charset=utf-8',
         })
-        var svgUrl = URL.createObjectURL(svgBlob)
-        var downloadLink = document.createElement('a')
+        let svgUrl = URL.createObjectURL(svgBlob)
+        let downloadLink = document.createElement('a')
         downloadLink.href = svgUrl
         downloadLink.download = name
         document.body.appendChild(downloadLink)
@@ -27,14 +27,14 @@
       }
 
       function render() {
-        var draft = TDDDraftFromString($('#rawtdd').val())
+        let draft = TDDDraftFromString($('#rawtdd').val())
         $('#name').val(draft.name)
         $('#svgdiv').text('')
         $('#svgdiv').append(tdd_to_svg(draft))
-        var width = 1024
-        var svg = $('#svgdiv svg')[0]
-        var bbox = svg.getBBox()
-        var scale = width / bbox.width
+        let width = 1024
+        let svg = $('#svgdiv svg')[0]
+        let bbox = svg.getBBox()
+        let scale = width / bbox.width
         $('#svgdiv svg').width(width)
         $('#svgdiv svg').height(bbox.height * scale)
 

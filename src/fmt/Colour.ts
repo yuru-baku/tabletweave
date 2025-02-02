@@ -1,13 +1,41 @@
 //code.iamkate.com
-export { Colour, RGBColour, HSLColour, HSVColour }
+export { Colour, HSL, HSV, RGB, RGBColour, HSLColour, HSVColour }
+
+//
+// Static Descriptions of different colour spaces
+//
+type HSL = {
+  h: number
+  s: number
+  l: number
+  a: number
+}
+
+type HSV = {
+  h: number
+  s: number
+  v: number
+  a: number
+}
+
+type RGB = {
+  r: number
+  g: number
+  b: number
+  a: number
+}
+
+//
+// Dynamic Handeling & Converting between Color Spaces
+//
 
 class Colour {
-  getHSL: any
-  getRGB: any
-  getHSV: any
+  getHSL: () => HSL
+  getRGB: () => RGB
+  getHSV: () => HSV
 
   getIntegerRGB() {
-    var a = this.getRGB()
+    let a = this.getRGB()
     return {
       r: Math.round(a.r),
       g: Math.round(a.g),
@@ -16,7 +44,7 @@ class Colour {
     }
   }
   getPercentageRGB() {
-    var a = this.getRGB()
+    let a = this.getRGB()
     return {
       r: (100 * a.r) / 255,
       g: (100 * a.g) / 255,
@@ -26,10 +54,10 @@ class Colour {
   }
 
   getCSSHexadecimalRGB() {
-    var a = this.getIntegerRGB()
-    var r = a.r.toString(16)
-    var g = a.g.toString(16)
-    var b = a.b.toString(16)
+    let a = this.getIntegerRGB()
+    let r = a.r.toString(16)
+    let g = a.g.toString(16)
+    let b = a.b.toString(16)
     return (
       '#' +
       (2 == r.length ? r : '0' + r) +
@@ -39,27 +67,27 @@ class Colour {
   }
 
   getCSSIntegerRGB() {
-    var a = this.getIntegerRGB()
+    let a = this.getIntegerRGB()
     return 'rgb(' + a.r + ',' + a.g + ',' + a.b + ')'
   }
   getCSSIntegerRGBA() {
-    var a = this.getIntegerRGB()
+    let a = this.getIntegerRGB()
     return 'rgba(' + a.r + ',' + a.g + ',' + a.b + ',' + a.a + ')'
   }
   getCSSPercentageRGB() {
-    var a = this.getPercentageRGB()
+    let a = this.getPercentageRGB()
     return 'rgb(' + a.r + '%,' + a.g + '%,' + a.b + '%)'
   }
   getCSSPercentageRGBA() {
-    var a = this.getPercentageRGB()
+    let a = this.getPercentageRGB()
     return 'rgba(' + a.r + '%,' + a.g + '%,' + a.b + '%,' + a.a + ')'
   }
   getCSSHSL() {
-    var a = this.getHSL()
+    let a = this.getHSL()
     return 'hsl(' + a.h + ',' + a.s + '%,' + a.l + '%)'
   }
   getCSSHSLA() {
-    var a = this.getHSL()
+    let a = this.getHSL()
     return 'hsla(' + a.h + ',' + a.s + '%,' + a.l + '%,' + a.a + ')'
   }
   setNodeColour(a) {
@@ -73,45 +101,48 @@ class Colour {
 class RGBColour extends Colour {
   constructor(a: number, h: number, k: number, n?: number) {
     super()
-    function m(a, b) {
-      if (0 == b) var d = 0
-      else
+    function m(a: number, b: number): number {
+      let d: number
+      if (0 == b) {
+        d = 0
+      } else
         switch (a) {
-          case c.r:
-            d = ((c.g - c.b) / b) * 60
+          case color.r:
+            d = ((color.g - color.b) / b) * 60
             0 > d && (d += 360)
             break
-          case c.g:
-            d = ((c.b - c.r) / b) * 60 + 120
+          case color.g:
+            d = ((color.b - color.r) / b) * 60 + 120
             break
-          case c.b:
-            d = ((c.r - c.g) / b) * 60 + 240
+          case color.b:
+            d = ((color.r - color.g) / b) * 60 + 240
         }
       return d
     }
-    var l = void 0 === n ? 1 : Math.max(0, Math.min(1, n)),
-      c = {
-        r: Math.max(0, Math.min(255, a)),
-        g: Math.max(0, Math.min(255, h)),
-        b: Math.max(0, Math.min(255, k)),
-      },
-      b = null,
-      d = null
-    this.getRGB = function () {
-      return { r: c.r, g: c.g, b: c.b, a: l }
+    let l = void 0 === n ? 1 : Math.max(0, Math.min(1, n))
+    let color = {
+      r: Math.max(0, Math.min(255, a)),
+      g: Math.max(0, Math.min(255, h)),
+      b: Math.max(0, Math.min(255, k)),
     }
-    this.getHSV = function () {
+    let b = null
+    let d = null
+
+    this.getRGB = function (): RGB {
+      return { r: color.r, g: color.g, b: color.b, a: l }
+    }
+    this.getHSV = function (): HSV {
       if (null == b) {
-        var a = Math.max(c.r, c.g, c.b),
-          d = a - Math.min(c.r, c.g, c.b)
+        let a = Math.max(color.r, color.g, color.b),
+          d = a - Math.min(color.r, color.g, color.b)
         b = { h: m(a, d), s: 0 == a ? 0 : (100 * d) / a, v: a / 2.55 }
       }
       return { h: b.h, s: b.s, v: b.v, a: l }
     }
-    this.getHSL = function () {
+    this.getHSL = function (): HSL {
       if (null == d) {
-        var a = Math.max(c.r, c.g, c.b),
-          b = a - Math.min(c.r, c.g, c.b),
+        let a = Math.max(color.r, color.g, color.b),
+          b = a - Math.min(color.r, color.g, color.b),
           f = a / 255 - b / 510
         d = {
           h: m(a, b),
@@ -142,17 +173,18 @@ class HSVColour extends Colour {
     this.e = null
   }
 
-  getRGB = function () {
+  getRGB = function (): RGB {
     if (null == this.d) {
+      let a: number, f: number, g: number, e: number, h: number, k: number
       if (0 == this.c) {
-        var a = this.b
-        var f = this.b
-        var g = this.b
+        a = this.b
+        f = this.b
+        g = this.b
       } else {
-        var e = this.l / 60 - Math.floor(this.l / 60)
-        var h = this.b * (1 - this.c / 100)
-        var k = this.b * (1 - (this.c / 100) * e)
-        var e = this.b * (1 - (this.c / 100) * (1 - e))
+        e = this.l / 60 - Math.floor(this.l / 60)
+        h = this.b * (1 - this.c / 100)
+        k = this.b * (1 - (this.c / 100) * e)
+        e = this.b * (1 - (this.c / 100) * (1 - e))
 
         switch (Math.floor(this.l / 60)) {
           case 0:
@@ -188,13 +220,13 @@ class HSVColour extends Colour {
     }
     return { r: this.d.r, g: this.d.g, b: this.d.b, a: this.m }
   }
-  getHSV = function () {
+  getHSV = function (): HSV {
     return { h: this.l, s: this.c, v: this.b, a: this.m }
   }
 
-  getHSL = function () {
+  getHSL = function (): HSL {
     if (null == this.e) {
-      var a = ((2 - this.c / 100) * this.b) / 2
+      let a = ((2 - this.c / 100) * this.b) / 2
       this.e = {
         h: this.l,
         s: (this.c * this.b) / (50 > a ? 2 * a : 200 - 2 * a),
@@ -224,22 +256,22 @@ class HSLColour extends Colour {
     this.e = null
   }
 
-  getRGB = function () {
+  getRGB = function (): RGB {
     if (this.d == null)
       if (0 == this.c) {
         this.d = { r: 2.55 * this.b, g: 2.55 * this.b, b: 2.55 * this.b }
       } else {
-        var e =
+        let e =
           50 > this.b
             ? this.b * (1 + this.c / 100)
             : this.b + this.c - (this.b * this.c) / 100
-        var f = 2 * this.b - e
+        let f = 2 * this.b - e
         this.d = {
           r: ((this.a + 120) / 60) % 6,
           g: this.a / 60,
           b: ((this.a + 240) / 60) % 6,
         }
-        for (var g in this.d)
+        for (let g in this.d)
           this.d.hasOwnProperty(g) &&
             ((this.d[g] =
               1 > this.d[g]
@@ -254,16 +286,16 @@ class HSLColour extends Colour {
     return { r: this.d.r, g: this.d.g, b: this.d.b, a: this.m }
   }
 
-  getHSV = function () {
+  getHSV = function (): HSV {
     if (this.e == null) {
-      var a = (this.c * (50 > this.b ? this.b : 100 - this.b)) / 100
+      let a = (this.c * (50 > this.b ? this.b : 100 - this.b)) / 100
       this.e = { h: this.l, s: (200 * a) / (this.b + a), v: a + this.b }
       isNaN(this.e.s) && (this.e.s = 0)
     }
     return { h: this.e.h, s: this.e.s, v: this.e.v, a: this.m }
   }
 
-  getHSL = function () {
+  getHSL = function (): HSL {
     return { h: this.l, s: this.c, l: this.b, a: this.m }
   }
 }

@@ -25,7 +25,7 @@ const colorIDs = [
 ]
 
 function json_to_tdd(json: JSON) {
-  var r = new TDDDraft()
+  let r = new TDDDraft()
 
   if (json['lower_cells'].length < 1) {
     /* This is a fall back for impossible values */
@@ -34,7 +34,7 @@ function json_to_tdd(json: JSON) {
   } else {
     /* This decodes the old json threading diagram to make the new one */
     r.threading = []
-    for (var x of json['lower_cells'][0]) {
+    for (let x of json['lower_cells'][0]) {
       if (x['direction'] == 'left') {
         r.threading.push('Z')
       } else {
@@ -43,9 +43,9 @@ function json_to_tdd(json: JSON) {
     }
 
     r.threadingColours = []
-    for (var y of json['lower_cells']) {
-      var row = []
-      for (var x of y) {
+    for (let y of json['lower_cells']) {
+      let row = []
+      for (let x of y) {
         if (x['colorid'] >= 0 && x['colorid'] < 16) {
           row.push(colorIDs[x['colorid']])
         } else if (x['colorid'] == -1) {
@@ -59,9 +59,9 @@ function json_to_tdd(json: JSON) {
   }
 
   /* This fills out the palette */
-  for (var n = 0; n < json['palette'].length; n++) {
+  for (let n = 0; n < json['palette'].length; n++) {
     const regex = /rgb\(\s*(\d+),\s*(\d+),\s*(\d+)\)/
-    var found = json['palette'][n].match(regex)
+    let found = json['palette'][n].match(regex)
     if (found) {
       r.palette[colorIDs[n]] = new RGBColour(found[1], found[2], found[3])
     }
@@ -69,16 +69,16 @@ function json_to_tdd(json: JSON) {
 
   /* The turning diagram can now be decoded (since it needed the threading diagram first) */
   r.turning = []
-  for (var y = 0; y < json['main_cells'].length; y++) {
+  for (let y = 0; y < json['main_cells'].length; y++) {
     r.turning[y] = []
-    for (var x = 0; x < json['main_cells'][y].length; x++) {
+    for (let x = 0; x < json['main_cells'][y].length; x++) {
       r.turning[y][x] = '\\'
     }
   }
 
-  for (var x = 0; x < r.turning[0].length; x++) {
-    var dir = r.threading[x] == 'Z' ? '\\' : '/'
-    for (var y = r.turning.length - 1; y >= 0; y--) {
+  for (let x = 0; x < r.turning[0].length; x++) {
+    let dir = r.threading[x] == 'Z' ? '\\' : '/'
+    for (let y = r.turning.length - 1; y >= 0; y--) {
       if (json['main_cells'][y][x]) {
         dir = dir == '\\' ? '/' : '\\'
       }

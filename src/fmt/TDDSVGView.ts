@@ -70,7 +70,7 @@ class TDDSVGView {
   invertingholessz: boolean
 
   constructor() {
-    var parent = document.createElement('div')
+    let parent = document.createElement('div')
     this.svg = $(parent).get()
 
     this.labelWidth = 30
@@ -104,7 +104,7 @@ class TDDSVGView {
       strokeWidth: 0,
     })
 
-    var fillpat = this.svg.pattern('fillpat', 0, 0, 4, 4, {
+    let fillpat = this.svg.pattern('fillpat', 0, 0, 4, 4, {
       patternUnits: 'userSpaceOnUse',
     })
     this.svg.rect(fillpat, 0, 0, 2, 2, {
@@ -150,7 +150,7 @@ class TDDSVGView {
     this.labelingholescw = true
     this.invertsz = false
     this.invertingsz = false
-    var grey_saturation = 0x99
+    let grey_saturation = 0x99
     this.hruler_position = undefined
     this.vruler_position = undefined
 
@@ -272,7 +272,7 @@ class TDDSVGView {
   }
 
   root() {
-    return this.svg[0];
+    return this.svg[0]
   }
 
   conform(draft) {
@@ -294,13 +294,13 @@ class TDDSVGView {
         $(this.labels.tablets.pop()).remove()
       }
       while (this.turning.length > 0) {
-        var row = this.turning.pop()
+        let row = this.turning.pop()
         while (row.length > 0) {
           this.remove_cell(row.pop())
         }
       }
       while (this.threading.length > 0) {
-        var tablet = this.threading.pop()
+        let tablet = this.threading.pop()
         $(tablet.direction).remove()
         while (tablet.holes.length > 0) {
           this.remove_cell(tablet.holes.pop())
@@ -312,7 +312,7 @@ class TDDSVGView {
       this.needsFullRedraw ||
       (this.repeats != undefined &&
         this.turning.length !=
-        (this.end_pick - this.start_pick + 1) * this.repeats) ||
+          (this.end_pick - this.start_pick + 1) * this.repeats) ||
       (this.repeats == undefined && this.turning.length != draft.picks()) ||
       this.threading.length != draft.tablets() ||
       (this.threading.length > 0 &&
@@ -352,9 +352,9 @@ class TDDSVGView {
       (this.show_twist ? cellborder + cellheight + cellborder : 0) +
       (this.show_turning
         ? cellborder +
-        (cellborder + cellheight) * num_picks +
-        cellborder +
-        cellheight
+          (cellborder + cellheight) * num_picks +
+          cellborder +
+          cellheight
         : intertablegap) +
       (this.show_threading
         ? intertablegap + cellborder + (cellborder + cellheight) * draft.holes()
@@ -379,7 +379,7 @@ class TDDSVGView {
     while (this.labels.picks.length > num_picks) {
       $(this.labels.picks.pop()).remove()
     }
-    for (var y = 0; y < this.labels.picks.length; y++) {
+    for (let y = 0; y < this.labels.picks.length; y++) {
       $(this.labels.picks[y]).attr('x', this.labelWidth - labelpadding)
       $(this.labels.picks[y]).attr(
         'y',
@@ -392,8 +392,8 @@ class TDDSVGView {
       }
     }
     while (this.labels.picks.length < num_picks) {
-      y = this.labels.picks.length
-      var label = '' + (y + 1)
+      let y = this.labels.picks.length
+      let label = '' + (y + 1)
       if (this.repeats != undefined) {
         label =
           '' + ((y % (this.end_pick - this.start_pick + 1)) + this.start_pick)
@@ -418,7 +418,7 @@ class TDDSVGView {
     while (this.labels.holes.length > draft.holes()) {
       $(this.labels.holes.pop()).remove()
     }
-    for (y = 0; y < this.labels.holes.length; y++) {
+    for (let y = 0; y < this.labels.holes.length; y++) {
       const hole_label = this.labelholescw
         ? hole_labels[y]
         : hole_labels[draft.holes() - y - 1]
@@ -430,7 +430,7 @@ class TDDSVGView {
       $(this.labels.holes[y]).text(hole_label)
     }
     while (this.labels.holes.length < draft.holes()) {
-      y = this.labels.holes.length
+      let y = this.labels.holes.length
       const hole_label = this.labelholescw
         ? hole_labels[y]
         : hole_labels[draft.holes() - y - 1]
@@ -455,18 +455,18 @@ class TDDSVGView {
     while (this.labels.tablets.length > draft.tablets()) {
       $(this.labels.tablets.pop()).remove()
     }
-    for (var x = 0; x < this.labels.tablets.length; x++) {
+    for (let x = 0; x < this.labels.tablets.length; x++) {
       $(this.labels.tablets[x]).attr(
         'x',
         this.labelWidth +
-        cellborder +
-        (cellborder + cellwidth) * x +
-        cellwidth / 2
+          cellborder +
+          (cellborder + cellwidth) * x +
+          cellwidth / 2
       )
       $(this.labels.tablets[x]).attr('y', threading_start_y - cellborder - 2)
     }
     while (this.labels.tablets.length < draft.tablets()) {
-      x = this.labels.tablets.length
+      let x = this.labels.tablets.length
       /*
       this.labels.tablets.push(
         this.svg.text(
@@ -490,62 +490,63 @@ class TDDSVGView {
     while (draft.tablets() < this.twist.length) {
       $(this.twist.pop()).remove()
     }
-    for (var x = 0; x < this.twist.length; x++) {
+    for (let x = 0; x < this.twist.length; x++) {
       $(this.twist[x]).attr(
         'x',
         this.labelWidth +
-        cellborder +
-        (cellborder + cellwidth) * x +
-        cellwidth / 2
-      )
-      $(this.twist[x]).attr('y', turning_start_y - cellborder - 2)
-    }
-    while (this.twist.length < draft.tablets()) {
-      /*
-      x = this.twist.length
-      this.twist.push(
-        this.svg.text(
-          this.twist_group,
-          this.labelWidth +
           cellborder +
           (cellborder + cellwidth) * x +
-          cellwidth / 2,
-          turning_start_y - cellborder - 2,
-          '✅',
-          {
-            stroke: '#000000',
-            style: 'font: 10px Arial; text-anchor: middle;',
-          }
-        )
+          cellwidth / 2
       )
-        */
-    }
+      $(this.twist[x]).attr('y', turning_start_y - cellborder - 2)
 
-    // Now we conform the cells of the turning diagram
-    for (y = 0; y < num_picks; y++) {
-      if (y >= this.turning.length) {
-        this.turning.push([])
+      while (this.twist.length < draft.tablets()) {
+        /*
+        x = this.twist.length
+        this.twist.push(
+          this.svg.text(
+            this.twist_group,
+            this.labelWidth +
+            cellborder +
+            (cellborder + cellwidth) * x +
+            cellwidth / 2,
+            turning_start_y - cellborder - 2,
+            '✅',
+            {
+              stroke: '#000000',
+              style: 'font: 10px Arial; text-anchor: middle;',
+            }
+          )
+        )
+          */
       }
-      for (x = 0; x < draft.tablets(); x++) {
-        if (x >= this.turning[y].length) {
-          this.turning[y].push(this.create_cell(x, y, turning_start_y))
+
+      // Now we conform the cells of the turning diagram
+      for (let y = 0; y < num_picks; y++) {
+        if (y >= this.turning.length) {
+          this.turning.push([])
         }
-        this.move_cell(this.turning[y][x], x, y, turning_start_y)
-        // Conform cell
-      }
-      while (draft.tablets() < this.turning[y].length) {
-        this.remove_cell(this.turning[y].pop())
+        for (x = 0; x < draft.tablets(); x++) {
+          if (x >= this.turning[y].length) {
+            this.turning[y].push(this.create_cell(x, y, turning_start_y))
+          }
+          this.move_cell(this.turning[y][x], x, y, turning_start_y)
+          // Conform cell
+        }
+        while (draft.tablets() < this.turning[y].length) {
+          this.remove_cell(this.turning[y].pop())
+        }
       }
     }
     while (num_picks < this.turning.length) {
-      var row = this.turning.pop()
+      let row = this.turning.pop()
       while (row.length > 0) {
         this.remove_cell(row.pop())
       }
     }
 
     // And the threading diagram
-    for (x = 0; x < draft.tablets(); x++) {
+    for (let x = 0; x < draft.tablets(); x++) {
       if (x >= this.threading.length) {
         /*
         this.threading.push({
@@ -568,15 +569,15 @@ class TDDSVGView {
       $(this.threading[x].direction).attr(
         'x',
         this.labelWidth +
-        cellborder +
-        (cellborder + cellwidth) * x +
-        cellwidth / 2
+          cellborder +
+          (cellborder + cellwidth) * x +
+          cellwidth / 2
       )
       $(this.threading[x].direction).attr(
         'y',
         threading_start_y + (cellborder + cellheight) * draft.holes() + 15
       )
-      for (y = 0; y < draft.holes(); y++) {
+      for (let y = 0; y < draft.holes(); y++) {
         if (y >= this.threading[x].holes.length) {
           this.threading[x].holes.push(
             this.create_cell(
@@ -596,7 +597,7 @@ class TDDSVGView {
       }
     }
     while (this.threading.length > draft.tablets()) {
-      var tablet = this.threading.pop()
+      let tablet = this.threading.pop()
       $(tablet.direction).remove()
       while (tablet.holes.length > 0) {
         this.remove_cell(tablet.holes.pop())
@@ -609,9 +610,9 @@ class TDDSVGView {
       $(this.root()).append(this.twist_group)
       $(this.twist_group).attr('visibility', 'visible')
 
-      for (var x = 0; x < draft.tablets(); x++) {
-        var twist = 0
-        for (var y = 0; y < draft.picks(); y++) {
+      for (let x = 0; x < draft.tablets(); x++) {
+        let twist = 0
+        for (let y = 0; y < draft.picks(); y++) {
           if (draft.turning[y][x] == '/') {
             twist++
           } else if (draft.turning[y][x] == '\\') {
@@ -639,12 +640,12 @@ class TDDSVGView {
       $(this.root()).append(this.threading_group)
       $(this.threading_group).attr('visibility', 'visible')
 
-      for (var x = 0; x < draft.tablets(); x++) {
+      for (let x = 0; x < draft.tablets(); x++) {
         $(this.threading[x].direction).text(
           (draft.threading[x] == 'S') != this.invertsz ? 'S' : 'Z'
         )
 
-        for (var y = 0; y < draft.holes(); y++) {
+        for (let y = 0; y < draft.holes(); y++) {
           if (draft.threading[x] == 'S')
             this.set_cell_direction(this.threading[x].holes[y], '/')
           else this.set_cell_direction(this.threading[x].holes[y], '\\')
@@ -671,49 +672,84 @@ class TDDSVGView {
       $(this.root()).append(this.overlay)
       $(this.main_group).attr('visibility', 'visible')
 
-      var tablet_position = []
-      for (var x = 0; x < draft.tablets(); x++) {
+      let tablet_position = []
+      for (let x = 0; x < draft.tablets(); x++) {
         tablet_position[x] = draft.holes() - 1
-      }
 
-      if (this.repeats != undefined) {
-        for (
-          var y = draft.picks() - 1;
-          y > draft.picks() - this.start_pick;
-          y--
-        ) {
-          if ((draft.threading[x] == 'S') == (draft.turning[y][x] == '/')) {
-            tablet_position[x] =
-              (tablet_position[x] + draft.holes() - 1) % draft.holes()
-          } else {
-            tablet_position[x] = (tablet_position[x] + 1) % draft.holes()
-          }
-        }
-        const ppr = this.end_pick - this.start_pick + 1
-        var cell = this.turning.length - 1
-
-        while (cell >= 0) {
+        if (this.repeats != undefined) {
           for (
-            var y = draft.picks() - this.start_pick;
-            y >= draft.picks() - this.end_pick;
+            let y = draft.picks() - 1;
+            y > draft.picks() - this.start_pick;
             y--
           ) {
-            //alert("y: " + y + " cell: " + cell);
+            if ((draft.threading[x] == 'S') == (draft.turning[y][x] == '/')) {
+              tablet_position[x] =
+                (tablet_position[x] + draft.holes() - 1) % draft.holes()
+            } else {
+              tablet_position[x] = (tablet_position[x] + 1) % draft.holes()
+            }
+          }
+          const ppr = this.end_pick - this.start_pick + 1
+          let cell = this.turning.length - 1
 
-            for (var x = 0; x < draft.tablets(); x++) {
-              var fg
+          while (cell >= 0) {
+            for (
+              let y = draft.picks() - this.start_pick;
+              y >= draft.picks() - this.end_pick;
+              y--
+            ) {
+              //alert("y: " + y + " cell: " + cell);
 
-              this.set_cell_direction(
-                this.turning[cell][x],
-                draft.turning[y][x]
-              )
-              this.set_cell_background(
-                this.turning[cell][x],
-                this.forwardcolour
-              )
+              for (let x = 0; x < draft.tablets(); x++) {
+                let fg
+
+                this.set_cell_direction(
+                  this.turning[cell][x],
+                  draft.turning[y][x]
+                )
+                this.set_cell_background(
+                  this.turning[cell][x],
+                  this.forwardcolour
+                )
+                if (
+                  (draft.threading[x] == 'S') ==
+                  (draft.turning[y][x] == '/')
+                ) {
+                  fg = draft.threadColour(x, tablet_position[x])
+                  this.turning[cell][x].b = false
+                  tablet_position[x] =
+                    (tablet_position[x] + draft.holes() - 1) % draft.holes()
+                } else {
+                  fg = draft.threadColour(
+                    x,
+                    (tablet_position[x] + 1) % draft.holes()
+                  )
+                  this.turning[cell][x].b = true
+                  tablet_position[x] = (tablet_position[x] + 1) % draft.holes()
+                }
+                this.set_cell_colour(this.turning[cell][x], fg)
+                this.set_cell_reverse_marker(this.turning[cell][x], false)
+              }
+
+              cell--
+            }
+          }
+        } else {
+          for (let y = draft.picks() - 1; y >= 0; y--) {
+            for (let x = 0; x < draft.tablets(); x++) {
+              let fg
+              this.set_cell_direction(this.turning[y][x], draft.turning[y][x])
               if ((draft.threading[x] == 'S') == (draft.turning[y][x] == '/')) {
                 fg = draft.threadColour(x, tablet_position[x])
-                this.turning[cell][x].b = false
+                if (this.show_squares) {
+                  this.set_cell_background(this.turning[y][x], fg)
+                } else {
+                  this.set_cell_background(
+                    this.turning[y][x],
+                    this.forwardcolour
+                  )
+                }
+                this.turning[y][x].b = false
                 tablet_position[x] =
                   (tablet_position[x] + draft.holes() - 1) % draft.holes()
               } else {
@@ -721,58 +757,29 @@ class TDDSVGView {
                   x,
                   (tablet_position[x] + 1) % draft.holes()
                 )
-                this.turning[cell][x].b = true
+                if (this.show_squares) {
+                  this.set_cell_background(this.turning[y][x], fg)
+                } else {
+                  this.set_cell_background(
+                    this.turning[y][x],
+                    this.backwardcolour
+                  )
+                }
+                this.turning[y][x].b = true
                 tablet_position[x] = (tablet_position[x] + 1) % draft.holes()
               }
-              this.set_cell_colour(this.turning[cell][x], fg)
-              this.set_cell_reverse_marker(this.turning[cell][x], false)
-            }
-
-            cell--
-          }
-        }
-      } else {
-        for (var y = draft.picks() - 1; y >= 0; y--) {
-          for (var x = 0; x < draft.tablets(); x++) {
-            var fg
-            this.set_cell_direction(this.turning[y][x], draft.turning[y][x])
-            if ((draft.threading[x] == 'S') == (draft.turning[y][x] == '/')) {
-              fg = draft.threadColour(x, tablet_position[x])
-              if (this.show_squares) {
-                this.set_cell_background(this.turning[y][x], fg)
+              if (!this.show_squares && this.show_ovals) {
+                this.set_cell_colour(this.turning[y][x], fg)
               } else {
-                this.set_cell_background(this.turning[y][x], this.forwardcolour)
+                this.set_cell_colour(this.turning[y][x], undefined)
               }
-              this.turning[y][x].b = false
-              tablet_position[x] =
-                (tablet_position[x] + draft.holes() - 1) % draft.holes()
-            } else {
-              fg = draft.threadColour(
-                x,
-                (tablet_position[x] + 1) % draft.holes()
+              this.set_cell_reverse_marker(
+                this.turning[y][x],
+                y != draft.picks() - 1 &&
+                  this.turning[y][x].b != this.turning[y + 1][x].b &&
+                  this.show_reversals
               )
-              if (this.show_squares) {
-                this.set_cell_background(this.turning[y][x], fg)
-              } else {
-                this.set_cell_background(
-                  this.turning[y][x],
-                  this.backwardcolour
-                )
-              }
-              this.turning[y][x].b = true
-              tablet_position[x] = (tablet_position[x] + 1) % draft.holes()
             }
-            if (!this.show_squares && this.show_ovals) {
-              this.set_cell_colour(this.turning[y][x], fg)
-            } else {
-              this.set_cell_colour(this.turning[y][x], undefined)
-            }
-            this.set_cell_reverse_marker(
-              this.turning[y][x],
-              y != draft.picks() - 1 &&
-              this.turning[y][x].b != this.turning[y + 1][x].b &&
-              this.show_reversals
-            )
           }
         }
       }
@@ -807,8 +814,8 @@ class TDDSVGView {
       $(this.hruler).attr(
         'x2',
         this.labelWidth +
-        cellborder +
-        (cellborder + cellwidth) * draft.tablets()
+          cellborder +
+          (cellborder + cellwidth) * draft.tablets()
       )
       $(this.hruler).attr('y1', threading_start_y)
       $(this.hruler).attr('y2', threading_start_y)
@@ -817,8 +824,8 @@ class TDDSVGView {
       $(this.hruler).attr(
         'x2',
         this.labelWidth +
-        cellborder +
-        (cellborder + cellwidth) * draft.tablets()
+          cellborder +
+          (cellborder + cellwidth) * draft.tablets()
       )
 
       if (this.hruler_position > 0) {
@@ -826,14 +833,14 @@ class TDDSVGView {
         $(this.hruler).attr(
           'y1',
           turning_start_y +
-          (cellborder + cellheight) *
-          (draft.picks() - this.hruler_position + 1)
+            (cellborder + cellheight) *
+              (draft.picks() - this.hruler_position + 1)
         )
         $(this.hruler).attr(
           'y2',
           turning_start_y +
-          (cellborder + cellheight) *
-          (draft.picks() - this.hruler_position + 1)
+            (cellborder + cellheight) *
+              (draft.picks() - this.hruler_position + 1)
         )
         this.ruler_group.append(this.hruler)
       } else {
@@ -868,19 +875,19 @@ class TDDSVGView {
         $(this.vruler.turning).attr(
           'x1',
           this.labelWidth +
-          (cellwidth + cellborder) * (this.vruler_position - 1)
+            (cellwidth + cellborder) * (this.vruler_position - 1)
         )
         $(this.vruler.turning).attr('y1', turning_start_y)
         $(this.vruler.turning).attr(
           'x2',
           this.labelWidth +
-          (cellwidth + cellborder) * (this.vruler_position - 1)
+            (cellwidth + cellborder) * (this.vruler_position - 1)
         )
         $(this.vruler.turning).attr(
           'y2',
           turning_start_y +
-          (cellheight + cellborder) * draft.picks() +
-          cellborder
+            (cellheight + cellborder) * draft.picks() +
+            cellborder
         )
       } else {
         $(this.vruler.turning).attr('visibility', 'hidden')
@@ -896,19 +903,19 @@ class TDDSVGView {
         $(this.vruler.threading).attr(
           'x1',
           this.labelWidth +
-          (cellwidth + cellborder) * (this.vruler_position - 1)
+            (cellwidth + cellborder) * (this.vruler_position - 1)
         )
         $(this.vruler.threading).attr('y1', threading_start_y)
         $(this.vruler.threading).attr(
           'x2',
           this.labelWidth +
-          (cellwidth + cellborder) * (this.vruler_position - 1)
+            (cellwidth + cellborder) * (this.vruler_position - 1)
         )
         $(this.vruler.threading).attr(
           'y2',
           threading_start_y +
-          (cellheight + cellborder) * draft.holes() +
-          cellborder
+            (cellheight + cellborder) * draft.holes() +
+            cellborder
         )
       } else {
         $(this.vruler.threading).attr('visibility', 'hidden')
@@ -928,8 +935,9 @@ class TDDSVGView {
     offset = 0,
     group = this.main_group,
     overlay = this.overlay
-  ) {/*
-    var rect = this.svg.rect(
+  ) {
+    /*
+    let rect = this.svg.rect(
       group,
       this.labelWidth + (cellborder + cellwidth) * x,
       offset + (cellborder + cellheight) * y,
@@ -942,7 +950,7 @@ class TDDSVGView {
       }
     )
 */
-    var revline = undefined
+    let revline = undefined
     if (overlay) {
       /*
       revline = this.svg.line(
@@ -969,11 +977,11 @@ class TDDSVGView {
       offset + cellborder + (cellborder + cellheight) * y + cellheight / 2
 
     /*
-  var g = this.svg.group(group, {
+  let g = this.svg.group(group, {
     transform: 'translate(' + X_coord + ',' + Y_coord + ') ' + 'rotate(45)',
   })
 
-  var ell = this.svg.ellipse(g, 0, 0, cellheight / 2, cellheight / 4, {
+  let ell = this.svg.ellipse(g, 0, 0, cellheight / 2, cellheight / 4, {
     fill: '#000000',
     stroke: '#000000',
     strokeWidth: 1,
@@ -1027,13 +1035,13 @@ class TDDSVGView {
     $(cell.g).attr(
       'transform',
       'translate(' +
-      cell.x +
-      ',' +
-      cell.y +
-      ') ' +
-      'rotate(' +
-      (dir == '\\' ? '45' : '-45') +
-      ')'
+        cell.x +
+        ',' +
+        cell.y +
+        ') ' +
+        'rotate(' +
+        (dir == '\\' ? '45' : '-45') +
+        ')'
     )
   }
 
