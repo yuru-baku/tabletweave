@@ -2,7 +2,7 @@
   This script provides a function that transforms the old json format into the new .tdd format
   */
 import { RGBColour } from './Colour'
-import { TDDDraft } from './tdd'
+import { TDDDraft } from '../tdd/tdd'
 export { json_to_tdd }
 
 const colorIDs = [

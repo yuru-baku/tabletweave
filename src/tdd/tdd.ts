@@ -1,8 +1,9 @@
-/*
-  This file provides a class for representing a tdd file in memory
-*/
-import * as Colour from './Colour'
-import * as NameThatColor from 'ntc-ts'
+/**
+ * This file provides a class for representing a tdd file in memory
+ */
+
+import * as Colour from '../fmt/Colour'
+import { getColorName, initColors, ORIGINAL_COLORS } from 'ntc-ts'
 export { TDDDraft, TDDDraftFromString }
 
 type PaletteKey = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 'a' | 'b'
@@ -16,7 +17,7 @@ class TDDDraft {
   turning: string[][]
 
   constructor() {
-    NameThatColor.initColors(NameThatColor.ORIGINAL_COLORS)
+    initColors(ORIGINAL_COLORS)
     this.name = 'untitled draft'
     this.resetPalette()
     this.threadingColours = [['1'], ['1'], ['1'], ['1']]
@@ -324,7 +325,7 @@ class TDDDraft {
     if (c == undefined) {
       return 'Empty'
     } else {
-      const name = NameThatColor.getColorName(c.getCSSHexadecimalRGB)
+      const name = getColorName(c.getCSSHexadecimalRGB).name
       return name + ' (' + c.getCSSHexadecimalRGB() + ')'
     }
   }
