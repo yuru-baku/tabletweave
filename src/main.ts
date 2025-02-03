@@ -194,7 +194,7 @@ function setupNumberInput(
     ?.addEventListener('change', function () {
       let new_val = validate(
         Math.round(<number>getValue('#' + id + ' .readout') / increment) *
-        increment,
+          increment,
         min_val,
         max_val
       )
@@ -206,7 +206,7 @@ function setupNumberInput(
     ?.addEventListener('click', function () {
       let new_val = validate(
         (Math.round(<number>getValue('#' + id + ' .readout') / increment) - 1) *
-        increment,
+          increment,
         min_val,
         max_val
       )
@@ -218,7 +218,7 @@ function setupNumberInput(
     ?.addEventListener('click', function () {
       let new_val = validate(
         (Math.round(<number>getValue('#' + id + ' .readout') / increment) + 1) *
-        increment,
+          increment,
         min_val,
         max_val,
         true
@@ -231,7 +231,7 @@ function setupNumberInput(
     '#' + id + ' .readout',
     validate(
       Math.round(<number>getValue('#' + id + ' .readout') / increment) *
-      increment,
+        increment,
       min_val,
       max_val
     )
@@ -638,7 +638,7 @@ $(function () {
   })
   let i
   for (i = 0; i < 12; i++) {
-    ; (function (i) {
+    ;(function (i) {
       $('#BOX' + (i + 1)).click(function () {
         fgcol = i
         saveToLocal()

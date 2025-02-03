@@ -6,23 +6,23 @@ import * as Colour from '../fmt/Colour'
 import { getColorName, initColors, ORIGINAL_COLORS } from 'ntc-ts'
 export { TDDDraft, TDDDraftFromString }
 
-type PaletteKey = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11;
-type Palette = Record<PaletteKey, Colour.RGBColour>;
+type PaletteKey = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11
+type Palette = Record<PaletteKey, Colour.RGBColour>
 
 class TDDDraft {
-  name: string;
-  palette: Palette;
-  threadingColours: string[][];
-  threading: string[];
-  turning: string[][];
+  name: string
+  palette: Palette
+  threadingColours: string[][]
+  threading: string[]
+  turning: string[][]
 
   constructor() {
-    initColors(ORIGINAL_COLORS);
-    this.name = 'untitled draft';
-    this.resetPalette();
-    this.threadingColours = [['1'], ['1'], ['1'], ['1']];
-    this.threading = ['Z'];
-    this.turning = [['\\']];
+    initColors(ORIGINAL_COLORS)
+    this.name = 'untitled draft'
+    this.resetPalette()
+    this.threadingColours = [['1'], ['1'], ['1'], ['1']]
+    this.threading = ['Z']
+    this.turning = [['\\']]
   }
 
   resetPalette() {
@@ -43,13 +43,13 @@ class TDDDraft {
   }
 
   getPicks(): number {
-    return this.turning.length;
+    return this.turning.length
   }
   getTablets(): number {
-    return this.turning[0].length;
+    return this.turning[0].length
   }
   getHoles(): number {
-    return this.threadingColours.length;
+    return this.threadingColours.length
   }
 
   addPicks(num: number): void {
@@ -135,7 +135,7 @@ class TDDDraft {
       this.turning[i] = this.turning[i].slice(
         Math.min(num, this.turning[i].length - 1),
         this.turning[i].length
-      );
+      )
     }
     for (let i = 0; i < this.getHoles(); i++) {
       this.threadingColours[i] = this.threadingColours[i].slice(
@@ -151,16 +151,16 @@ class TDDDraft {
 
   getColor(colorIndex: number): Colour.Colour {
     if (!(colorIndex in this.palette)) {
-      throw new Error('invalid index: ${colorIndex}');
+      throw new Error('invalid index: ${colorIndex}')
     }
-    return this.palette[colorIndex];
+    return this.palette[colorIndex]
   }
 
   setColor(colorIndex: number, color: Colour.Colour): void {
     if (!(colorIndex in this.palette)) {
-      throw new Error('invalid index: ${colorIndex}');
+      throw new Error('invalid index: ${colorIndex}')
     }
-    this.palette[colorIndex] = color;
+    this.palette[colorIndex] = color
   }
 
   reverse(tablet: number, pick: number): void {
@@ -205,89 +205,90 @@ class TDDDraft {
   threadCount(c: number): number {
     const counter = (filterValue: string) => {
       return this.threadingColours.reduce(
-        (count, colours) => count + colours.filter((x) => x == filterValue).length,
+        (count, colours) =>
+          count + colours.filter((x) => x == filterValue).length,
         0
       )
-    };
+    }
     if (0 <= c && c < 10) {
-      return counter('' + c);
+      return counter('' + c)
     } else if (c == 10) {
-      return counter('a');
+      return counter('a')
     } else if (c == 11) {
-      return counter('b');
+      return counter('b')
     } else {
-      return counter(' ');
+      return counter(' ')
     }
   }
 
   clearTurning(): void {
     for (let i = 0; i < this.getTablets(); i++) {
-      let val = '\\';
+      let val = '\\'
       if (this.threading[i] == 'S') {
-        val = '/';
+        val = '/'
       }
       for (let j = 0; j < this.getPicks(); j++) {
-        this.turning[j][i] = val;
+        this.turning[j][i] = val
       }
     }
   }
 
   describePick(num: number): string {
-    let description = '';
-    let direction = 'F';
-    let n = 0;
+    let description = ''
+    let direction = 'F'
+    let n = 0
 
     for (let i = 0; i < this.getTablets(); i++) {
-      let newDirection: string;
+      let newDirection: string
       if (
         (this.turning[this.getPicks() - 1 - num][i] == '\\') ==
         (this.threading[i] == 'Z')
       ) {
-        newDirection = 'F';
+        newDirection = 'F'
       } else {
-        newDirection = 'B';
+        newDirection = 'B'
       }
 
       if (newDirection == direction) {
-        n += 1;
+        n += 1
       } else {
         if (n >= 1) {
-          description += '' + n + direction + ' ';
+          description += '' + n + direction + ' '
         }
-        direction = newDirection;
-        n = 1;
+        direction = newDirection
+        n = 1
       }
     }
 
     if (n >= 1) {
-      description += '' + n + direction;
+      description += '' + n + direction
     }
 
-    return description;
+    return description
   }
 
   describeTablet(x: number, invertsz: boolean): string {
     return (
       ((this.threading[x] == 'S') != invertsz ? 'S' : 'Z') + ' threaded tablet'
-    );
+    )
   }
 
   describeHole(x: number, y: number): string {
-    const color = this.threadColour(x, y);
+    const color = this.threadColour(x, y)
     if (color == undefined) {
-      return 'Empty';
+      return 'Empty'
     } else {
-      const name = getColorName(color.getCSSHexadecimalRGB).name;
-      return name + ' (' + color.getCSSHexadecimalRGB() + ')';
+      const name = getColorName(color.getCSSHexadecimalRGB).name
+      return name + ' (' + color.getCSSHexadecimalRGB() + ')'
     }
   }
 
   fromString(raw: string): void {
-    let lines = raw.split(/\r?\n/);
+    let lines = raw.split(/\r?\n/)
 
     // Read the header
-    let match = lines.shift().match(/^#\s*tdd\s+v(\d+)\.(\d+)\s*$/);
-    if (!match) throw 'Not a valid tdd file';
+    let match = lines.shift().match(/^#\s*tdd\s+v(\d+)\.(\d+)\s*$/)
+    if (!match) throw 'Not a valid tdd file'
 
     if (
       parseInt(match[1]) > 1 ||
@@ -295,83 +296,82 @@ class TDDDraft {
     ) {
       console.log(
         'WARNING: Processing tdd file from future version of tdd. This may not work.'
-      );
+      )
     }
 
-    match = lines.shift().match(/^#\s*(.+)\s*$/);
+    match = lines.shift().match(/^#\s*(.+)\s*$/)
     if (match) {
-      this.name = match[1];
+      this.name = match[1]
     }
 
     // Discard empty lines
-    let line = lines.shift();
+    let line = lines.shift()
     while (line.match(/^(#.*)?\s*$/)) {
-      line = lines.shift();
+      line = lines.shift()
     }
 
     // Read the turning diagram
     this.turning = []
     while (!line.match(/^\s*$/)) {
-      let row = [];
+      let row = []
       for (let c of line) {
         if (c == '\\') {
-          row.push('\\');
-        }
-        else {
-          row.push('/');
+          row.push('\\')
+        } else {
+          row.push('/')
         }
       }
-      this.turning.push(row);
-      line = lines.shift();
+      this.turning.push(row)
+      line = lines.shift()
     }
 
     // Discard empty lines
-    line = lines.shift();
+    line = lines.shift()
     while (line.match(/^(#.*)?$/)) {
-      line = lines.shift();
+      line = lines.shift()
     }
 
     // Read the threading diagram
-    this.threadingColours = [];
+    this.threadingColours = []
     while (!line.match(/^$/)) {
       if (line.match(/^[SZ]+$/)) {
-        this.threading = [];
+        this.threading = []
         for (let c of line) {
-          this.threading.push(c);
+          this.threading.push(c)
         }
       } else {
-        let row = [];
+        let row = []
         for (let c of line) {
-          row.push(c);
+          row.push(c)
         }
-        this.threadingColours.push(row);
+        this.threadingColours.push(row)
       }
 
-      line = lines.shift();
+      line = lines.shift()
     }
 
     // Discard empty lines
-    line = lines.shift();
+    line = lines.shift()
     while (line.match(/^(#.*)?\s*$/)) {
-      line = lines.shift();
+      line = lines.shift()
     }
 
     // Read the palette
     while (true) {
       let match = line.match(
         /^\s*(\w)\s*-\s*#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})\s*$/
-      );
+      )
       if (!match) {
-        break;
+        break
       }
 
       this.palette[match[1]] = new Colour.RGBColour(
         parseInt(match[2], 16),
         parseInt(match[3], 16),
         parseInt(match[4], 16)
-      );
+      )
 
-      line = lines.shift();
+      line = lines.shift()
     }
   }
 
@@ -411,7 +411,7 @@ class TDDDraft {
 }
 
 function TDDDraftFromString(raw: string): TDDDraft {
-  let draft = new TDDDraft();
-  draft.fromString(raw);
-  return draft;
+  let draft = new TDDDraft()
+  draft.fromString(raw)
+  return draft
 }

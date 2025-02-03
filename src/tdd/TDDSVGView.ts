@@ -316,7 +316,7 @@ class TDDSVGView {
       this.needsFullRedraw ||
       (this.repeats != undefined &&
         this.turning.length !=
-        (this.end_pick - this.start_pick + 1) * this.repeats) ||
+          (this.end_pick - this.start_pick + 1) * this.repeats) ||
       (this.repeats == undefined && this.turning.length != draft.getPicks()) ||
       this.threading.length != draft.getTablets() ||
       (this.threading.length > 0 &&
@@ -359,9 +359,9 @@ class TDDSVGView {
       (this.show_twist ? cellborder + cellheight + cellborder : 0) +
       (this.show_turning
         ? cellborder +
-        (cellborder + cellheight) * num_picks +
-        cellborder +
-        cellheight
+          (cellborder + cellheight) * num_picks +
+          cellborder +
+          cellheight
         : intertablegap) +
       (this.show_threading
         ? intertablegap + cellborder + (cellborder + cellheight) * draft.holes()
@@ -468,9 +468,9 @@ class TDDSVGView {
       $(this.labels.tablets[x]).attr(
         'x',
         this.labelWidth +
-        cellborder +
-        (cellborder + cellwidth) * x +
-        cellwidth / 2
+          cellborder +
+          (cellborder + cellwidth) * x +
+          cellwidth / 2
       )
       $(this.labels.tablets[x]).attr('y', threading_start_y - cellborder - 2)
     }
@@ -503,9 +503,9 @@ class TDDSVGView {
       $(this.twist[x]).attr(
         'x',
         this.labelWidth +
-        cellborder +
-        (cellborder + cellwidth) * x +
-        cellwidth / 2
+          cellborder +
+          (cellborder + cellwidth) * x +
+          cellwidth / 2
       )
       $(this.twist[x]).attr('y', turning_start_y - cellborder - 2)
 
@@ -578,9 +578,9 @@ class TDDSVGView {
       $(this.threading[x].direction).attr(
         'x',
         this.labelWidth +
-        cellborder +
-        (cellborder + cellwidth) * x +
-        cellwidth / 2
+          cellborder +
+          (cellborder + cellwidth) * x +
+          cellwidth / 2
       )
       $(this.threading[x].direction).attr(
         'y',
@@ -733,14 +733,16 @@ class TDDSVGView {
                   fg = draft.threadColour(x, tablet_position[x])
                   this.turning[cell][x].b = false
                   tablet_position[x] =
-                    (tablet_position[x] + draft.getHoles() - 1) % draft.getHoles()
+                    (tablet_position[x] + draft.getHoles() - 1) %
+                    draft.getHoles()
                 } else {
                   fg = draft.threadColour(
                     x,
                     (tablet_position[x] + 1) % draft.getHoles()
                   )
                   this.turning[cell][x].b = true
-                  tablet_position[x] = (tablet_position[x] + 1) % draft.getHoles()
+                  tablet_position[x] =
+                    (tablet_position[x] + 1) % draft.getHoles()
                 }
                 this.set_cell_colour(this.turning[cell][x], fg)
                 this.set_cell_reverse_marker(this.turning[cell][x], false)
@@ -791,8 +793,8 @@ class TDDSVGView {
               this.set_cell_reverse_marker(
                 this.turning[y][x],
                 y != draft.getPicks() - 1 &&
-                this.turning[y][x].b != this.turning[y + 1][x].b &&
-                this.show_reversals
+                  this.turning[y][x].b != this.turning[y + 1][x].b &&
+                  this.show_reversals
               )
             }
           }
@@ -831,8 +833,8 @@ class TDDSVGView {
       $(this.hruler).attr(
         'x2',
         this.labelWidth +
-        cellborder +
-        (cellborder + cellwidth) * draft.getTablets()
+          cellborder +
+          (cellborder + cellwidth) * draft.getTablets()
       )
       $(this.hruler).attr('y1', threading_start_y)
       $(this.hruler).attr('y2', threading_start_y)
@@ -841,8 +843,8 @@ class TDDSVGView {
       $(this.hruler).attr(
         'x2',
         this.labelWidth +
-        cellborder +
-        (cellborder + cellwidth) * draft.getTablets()
+          cellborder +
+          (cellborder + cellwidth) * draft.getTablets()
       )
 
       if (this.hruler_position > 0) {
@@ -850,14 +852,14 @@ class TDDSVGView {
         $(this.hruler).attr(
           'y1',
           turning_start_y +
-          (cellborder + cellheight) *
-          (draft.getPicks() - this.hruler_position + 1)
+            (cellborder + cellheight) *
+              (draft.getPicks() - this.hruler_position + 1)
         )
         $(this.hruler).attr(
           'y2',
           turning_start_y +
-          (cellborder + cellheight) *
-          (draft.getPicks() - this.hruler_position + 1)
+            (cellborder + cellheight) *
+              (draft.getPicks() - this.hruler_position + 1)
         )
         this.ruler_group.append(this.hruler)
       } else {
@@ -892,19 +894,19 @@ class TDDSVGView {
         $(this.vruler.turning).attr(
           'x1',
           this.labelWidth +
-          (cellwidth + cellborder) * (this.vruler_position - 1)
+            (cellwidth + cellborder) * (this.vruler_position - 1)
         )
         $(this.vruler.turning).attr('y1', turning_start_y)
         $(this.vruler.turning).attr(
           'x2',
           this.labelWidth +
-          (cellwidth + cellborder) * (this.vruler_position - 1)
+            (cellwidth + cellborder) * (this.vruler_position - 1)
         )
         $(this.vruler.turning).attr(
           'y2',
           turning_start_y +
-          (cellheight + cellborder) * draft.getPicks() +
-          cellborder
+            (cellheight + cellborder) * draft.getPicks() +
+            cellborder
         )
       } else {
         $(this.vruler.turning).attr('visibility', 'hidden')
@@ -920,19 +922,19 @@ class TDDSVGView {
         $(this.vruler.threading).attr(
           'x1',
           this.labelWidth +
-          (cellwidth + cellborder) * (this.vruler_position - 1)
+            (cellwidth + cellborder) * (this.vruler_position - 1)
         )
         $(this.vruler.threading).attr('y1', threading_start_y)
         $(this.vruler.threading).attr(
           'x2',
           this.labelWidth +
-          (cellwidth + cellborder) * (this.vruler_position - 1)
+            (cellwidth + cellborder) * (this.vruler_position - 1)
         )
         $(this.vruler.threading).attr(
           'y2',
           threading_start_y +
-          (cellheight + cellborder) * draft.getHoles() +
-          cellborder
+            (cellheight + cellborder) * draft.getHoles() +
+            cellborder
         )
       } else {
         $(this.vruler.threading).attr('visibility', 'hidden')
@@ -1061,13 +1063,13 @@ class TDDSVGView {
     $(cell.g).attr(
       'transform',
       'translate(' +
-      cell.x +
-      ',' +
-      cell.y +
-      ') ' +
-      'rotate(' +
-      (dir == '\\' ? '45' : '-45') +
-      ')'
+        cell.x +
+        ',' +
+        cell.y +
+        ') ' +
+        'rotate(' +
+        (dir == '\\' ? '45' : '-45') +
+        ')'
     )
 
     console.log('enter set_cell_direction')
