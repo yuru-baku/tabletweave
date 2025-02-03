@@ -275,7 +275,9 @@ class TDDSVGView {
     return this.svg[0]
   }
 
-  conform(draft) {
+  conform(draft: TDDDraft): void {
+    console.log('Enter Conform')
+    return;
     const num_picks =
       this.repeats == undefined
         ? draft.picks()
@@ -312,7 +314,7 @@ class TDDSVGView {
       this.needsFullRedraw ||
       (this.repeats != undefined &&
         this.turning.length !=
-          (this.end_pick - this.start_pick + 1) * this.repeats) ||
+        (this.end_pick - this.start_pick + 1) * this.repeats) ||
       (this.repeats == undefined && this.turning.length != draft.picks()) ||
       this.threading.length != draft.tablets() ||
       (this.threading.length > 0 &&
@@ -332,9 +334,12 @@ class TDDSVGView {
     this.conform_rulers(draft)
 
     this.needsFullRedraw = false
+    console.log('EXIT Conform')
   }
 
   conform_size(draft) {
+    console.log('enter conform_size')
+
     const num_picks =
       this.repeats == undefined
         ? draft.picks()
@@ -352,9 +357,9 @@ class TDDSVGView {
       (this.show_twist ? cellborder + cellheight + cellborder : 0) +
       (this.show_turning
         ? cellborder +
-          (cellborder + cellheight) * num_picks +
-          cellborder +
-          cellheight
+        (cellborder + cellheight) * num_picks +
+        cellborder +
+        cellheight
         : intertablegap) +
       (this.show_threading
         ? intertablegap + cellborder + (cellborder + cellheight) * draft.holes()
@@ -398,8 +403,9 @@ class TDDSVGView {
         label =
           '' + ((y % (this.end_pick - this.start_pick + 1)) + this.start_pick)
       }
-      /*
+
       this.labels.picks.push(
+        /*
         this.svg.text(
           this.main_group,
           this.labelWidth - labelpadding,
@@ -410,8 +416,8 @@ class TDDSVGView {
             style: 'font: 15px Arial; text-anchor: end;',
           }
         )
+        */
       )
-      */
     }
 
     // Next the holes
@@ -459,9 +465,9 @@ class TDDSVGView {
       $(this.labels.tablets[x]).attr(
         'x',
         this.labelWidth +
-          cellborder +
-          (cellborder + cellwidth) * x +
-          cellwidth / 2
+        cellborder +
+        (cellborder + cellwidth) * x +
+        cellwidth / 2
       )
       $(this.labels.tablets[x]).attr('y', threading_start_y - cellborder - 2)
     }
@@ -494,9 +500,9 @@ class TDDSVGView {
       $(this.twist[x]).attr(
         'x',
         this.labelWidth +
-          cellborder +
-          (cellborder + cellwidth) * x +
-          cellwidth / 2
+        cellborder +
+        (cellborder + cellwidth) * x +
+        cellwidth / 2
       )
       $(this.twist[x]).attr('y', turning_start_y - cellborder - 2)
 
@@ -569,9 +575,9 @@ class TDDSVGView {
       $(this.threading[x].direction).attr(
         'x',
         this.labelWidth +
-          cellborder +
-          (cellborder + cellwidth) * x +
-          cellwidth / 2
+        cellborder +
+        (cellborder + cellwidth) * x +
+        cellwidth / 2
       )
       $(this.threading[x].direction).attr(
         'y',
@@ -603,9 +609,11 @@ class TDDSVGView {
         this.remove_cell(tablet.holes.pop())
       }
     }
+    console.log('exit conform_size')
   }
 
-  conform_twist(draft) {
+  conform_twist(draft: TDDDraft): void {
+    console.log('enter conform_twist')
     if (this.show_twist) {
       $(this.root()).append(this.twist_group)
       $(this.twist_group).attr('visibility', 'visible')
@@ -633,9 +641,11 @@ class TDDSVGView {
       $(this.twist_group).detach()
       this.showing_twist = false
     }
+    console.log('exit this.conform_twist')
   }
 
-  conform_threading(draft) {
+  conform_threading(draft: TDDDraft): void {
+    console.log('enter conform_threading')
     if (this.show_threading) {
       $(this.root()).append(this.threading_group)
       $(this.threading_group).attr('visibility', 'visible')
@@ -664,9 +674,11 @@ class TDDSVGView {
       $(this.threading_group).detach()
       this.showing_threading = false
     }
+    console.log('exit conform_threading')
   }
 
-  conform_turning(draft) {
+  conform_turning(draft: TDDDraft): void {
+    console.log('enter conform_turning')
     if (this.show_turning) {
       $(this.root()).append(this.main_group)
       $(this.root()).append(this.overlay)
@@ -776,8 +788,8 @@ class TDDSVGView {
               this.set_cell_reverse_marker(
                 this.turning[y][x],
                 y != draft.picks() - 1 &&
-                  this.turning[y][x].b != this.turning[y + 1][x].b &&
-                  this.show_reversals
+                this.turning[y][x].b != this.turning[y + 1][x].b &&
+                this.show_reversals
               )
             }
           }
@@ -789,9 +801,11 @@ class TDDSVGView {
       $(this.overlay).detach()
       this.showing_turning = false
     }
+    console.log('exit conform_turning')
   }
 
-  conform_rulers(draft) {
+  conform_rulers(draft: TDDDraft): void {
+    console.log('enter conform_rulers')
     const num_picks =
       this.repeats == undefined
         ? draft.picks()
@@ -814,8 +828,8 @@ class TDDSVGView {
       $(this.hruler).attr(
         'x2',
         this.labelWidth +
-          cellborder +
-          (cellborder + cellwidth) * draft.tablets()
+        cellborder +
+        (cellborder + cellwidth) * draft.tablets()
       )
       $(this.hruler).attr('y1', threading_start_y)
       $(this.hruler).attr('y2', threading_start_y)
@@ -824,8 +838,8 @@ class TDDSVGView {
       $(this.hruler).attr(
         'x2',
         this.labelWidth +
-          cellborder +
-          (cellborder + cellwidth) * draft.tablets()
+        cellborder +
+        (cellborder + cellwidth) * draft.tablets()
       )
 
       if (this.hruler_position > 0) {
@@ -833,14 +847,14 @@ class TDDSVGView {
         $(this.hruler).attr(
           'y1',
           turning_start_y +
-            (cellborder + cellheight) *
-              (draft.picks() - this.hruler_position + 1)
+          (cellborder + cellheight) *
+          (draft.picks() - this.hruler_position + 1)
         )
         $(this.hruler).attr(
           'y2',
           turning_start_y +
-            (cellborder + cellheight) *
-              (draft.picks() - this.hruler_position + 1)
+          (cellborder + cellheight) *
+          (draft.picks() - this.hruler_position + 1)
         )
         this.ruler_group.append(this.hruler)
       } else {
@@ -875,19 +889,19 @@ class TDDSVGView {
         $(this.vruler.turning).attr(
           'x1',
           this.labelWidth +
-            (cellwidth + cellborder) * (this.vruler_position - 1)
+          (cellwidth + cellborder) * (this.vruler_position - 1)
         )
         $(this.vruler.turning).attr('y1', turning_start_y)
         $(this.vruler.turning).attr(
           'x2',
           this.labelWidth +
-            (cellwidth + cellborder) * (this.vruler_position - 1)
+          (cellwidth + cellborder) * (this.vruler_position - 1)
         )
         $(this.vruler.turning).attr(
           'y2',
           turning_start_y +
-            (cellheight + cellborder) * draft.picks() +
-            cellborder
+          (cellheight + cellborder) * draft.picks() +
+          cellborder
         )
       } else {
         $(this.vruler.turning).attr('visibility', 'hidden')
@@ -903,19 +917,19 @@ class TDDSVGView {
         $(this.vruler.threading).attr(
           'x1',
           this.labelWidth +
-            (cellwidth + cellborder) * (this.vruler_position - 1)
+          (cellwidth + cellborder) * (this.vruler_position - 1)
         )
         $(this.vruler.threading).attr('y1', threading_start_y)
         $(this.vruler.threading).attr(
           'x2',
           this.labelWidth +
-            (cellwidth + cellborder) * (this.vruler_position - 1)
+          (cellwidth + cellborder) * (this.vruler_position - 1)
         )
         $(this.vruler.threading).attr(
           'y2',
           threading_start_y +
-            (cellheight + cellborder) * draft.holes() +
-            cellborder
+          (cellheight + cellborder) * draft.holes() +
+          cellborder
         )
       } else {
         $(this.vruler.threading).attr('visibility', 'hidden')
@@ -927,15 +941,17 @@ class TDDSVGView {
     }
     $(this.root()).append(this.ruler_group)
     $(this.root()).append(this.threading_ruler_group)
+    console.log('exit conform_rulers')
   }
 
   create_cell(
-    x,
-    y,
+    x: number,
+    y: number,
     offset = 0,
     group = this.main_group,
     overlay = this.overlay
-  ) {
+  ): void {
+    console.log('enter create_cell')
     /*
     let rect = this.svg.rect(
       group,
@@ -996,16 +1012,21 @@ class TDDSVGView {
       b: false,
       revline: revline,
     }*/
+    console.log('exit create_cell')
   }
 
-  remove_cell(cell) {
+  remove_cell(cell): void {
+    console.log('enter remove_cell')
     $(cell.rect).remove()
     $(cell.ell).remove()
     $(cell.g).remove()
     $(cell.revline).remove()
+    console.log('enter remove_cell')
   }
 
-  move_cell(cell, x, y, offset = 0) {
+  move_cell(cell, x: number, y: number, offset = 0): void {
+    console.log('enter move_cell')
+
     $(cell.rect).attr('x', this.labelWidth + (cellborder + cellwidth) * x)
     $(cell.rect).attr('y', offset + (cellborder + cellheight) * y)
     $(cell.rect).css('strokeWidth', this.show_grid ? cellborder : 0)
@@ -1029,29 +1050,35 @@ class TDDSVGView {
       'transform',
       'translate(' + cell.x + ',' + cell.y + ') ' + 'rotate(45)'
     )
+    console.log('enter move_cell')
   }
 
-  set_cell_direction(cell, dir) {
+  set_cell_direction(cell, dir): void {
+    console.log('enter set_cell_direction')
     $(cell.g).attr(
       'transform',
       'translate(' +
-        cell.x +
-        ',' +
-        cell.y +
-        ') ' +
-        'rotate(' +
-        (dir == '\\' ? '45' : '-45') +
-        ')'
+      cell.x +
+      ',' +
+      cell.y +
+      ') ' +
+      'rotate(' +
+      (dir == '\\' ? '45' : '-45') +
+      ')'
     )
+
+    console.log('enter set_cell_direction')
   }
 
   set_cell_colour(cell, colour) {
+    console.log('enter set_cell_colour')
     if (colour == undefined) {
       $(cell.ell).attr('visibility', 'hidden')
     } else {
       $(cell.ell).removeAttr('visibility')
       $(cell.ell).attr('fill', colour.getCSSHexadecimalRGB())
     }
+    console.log('enter set_cell_colour')
   }
 
   set_cell_background(cell, colour) {

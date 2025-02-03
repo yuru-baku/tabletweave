@@ -266,6 +266,7 @@ function updateDraft(): void {
 }
 
 function redraw(): void {
+  console.log('enter REDRAW')
   let scale = Math.pow(2, getValue('#scalecontrols .readout') / 10)
   let rscale = Math.pow(2, getValue('#rscalecontrols .readout') / 10)
 
@@ -378,6 +379,7 @@ function redraw(): void {
   $('#copyright').css('position', 'absolute')
   $('#copyright').css('top', bot + 10)
   $('#copyright').css('botton', undefined)
+  console.log('EXIT REDRAW')
 }
 
 function redrawControls(): void {
@@ -567,10 +569,12 @@ function updateGrey(grey: number): void {
 }
 
 function setControlsFromDraft(): void {
+  console.log('enter setControlsFromDraft')
+
   setValue('#mainrowcontrols .readout', draft.picks())
   setValue('#lowrowcontrols .readout', draft.holes())
   setValue('#colcontrols .readout', draft.tablets())
-  setValue('#draftname .readout', draft.name)
+  setValue('#draftname', draft.name)
 
   if (<number>getValue('#hruler .readout') > (draft.picks() + 1)) {
     setValue('#hruler .readout', draft.picks() + 1);
@@ -597,6 +601,7 @@ function setControlsFromDraft(): void {
     setValue('#repeatend .readout', draft.picks());
     repeat.endPick(draft.picks());
   }
+  console.log('enter setControlsFromDraft')
 }
 
 function loadFile() {
@@ -623,10 +628,11 @@ function loadFile() {
           return;
         }
 
-        saveToLocal();
-        setControlsFromDraft();
-        redrawControls();
-        redraw();
+        saveToLocal()
+        setControlsFromDraft()
+        redrawControls()
+
+        redraw()
       }
     })(/^.*\.tdd(\.txt)?$/.test(files[0].name));
 
@@ -759,11 +765,12 @@ function exportDraft(mimetype, root) {
 }
 
 function applyAccordian() {
-  $('.accordion').each(function () {
-    if ($(this).hasClass('active')) {
-      $(this).next().show()
-    } else {
-      $(this).next().hide()
+  document.querySelectorAll('.accordion').forEach((accordion) => {
+    const nextElement = accordion.nextElementSibling
+
+    if (nextElement instanceof HTMLElement) {
+      const isActive = accordion.classList.contains('active')
+      nextElement.style.display = isActive ? 'block' : 'none'
     }
   })
 }

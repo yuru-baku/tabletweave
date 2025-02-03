@@ -19,8 +19,12 @@
           <button class="accordion active">Draft Name</button>
           <div class="panel">
             <span class="panelitem">
-              <label class="panelitemlabel">Draft Name:</label>
-              <input class="panelitemvalue readout" value="" />
+              <label class="panelitemlabel" for="draftname">Draft Name:</label>
+              <input
+                id="draftname"
+                class="panelitemvalue readout"
+                value=""
+                type="text" />
             </span>
           </div>
         </div>
@@ -187,7 +191,7 @@
                 >Label Holes Clockwise</label
               >
               <span class="panelitemvalue">
-                <input type="checkbox" id="showgrid" checked="true" />
+                <input id="labelholescw" type="checkbox" checked="true" />
               </span>
             </span>
             <span class="panelitem" id="showcontrols">
