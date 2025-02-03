@@ -1,6 +1,6 @@
-import { defineConfig } from 'vite'
-import path from 'path'
-import sass from 'vite-plugin-sass'
+import { defineConfig } from 'vite';
+import path from 'path';
+import sass from 'vite-plugin-sass';
 
 export default defineConfig({
   root: './',
@@ -10,4 +10,4 @@ export default defineConfig({
     },
   },
   plugins: [sass()],
-})
+});

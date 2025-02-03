@@ -1,4 +1,4 @@
-export { isChecked, setChecked, getValue, setValue }
+export { isChecked, setChecked, getValue, setValue };
 
 /**
  *
@@ -6,8 +6,8 @@ export { isChecked, setChecked, getValue, setValue }
  * @returns weather the CheckBox is checked.
  */
 function isChecked(htmlQuery: string): boolean {
-  const element = document.querySelector(htmlQuery) as HTMLInputElement
-  return element.checked
+  const element = document.querySelector(htmlQuery) as HTMLInputElement;
+  return element.checked;
 }
 
 /**
@@ -16,8 +16,8 @@ function isChecked(htmlQuery: string): boolean {
  * @returns weather the CheckBox is checked.
  */
 function setChecked(htmlQuery: string, isChecked: boolean): void {
-  let element = document.querySelector(htmlQuery) as HTMLInputElement
-  element.checked = isChecked
+  let element = document.querySelector(htmlQuery) as HTMLInputElement;
+  element.checked = isChecked;
 }
 
 /**
@@ -26,11 +26,11 @@ function setChecked(htmlQuery: string, isChecked: boolean): void {
  * @returns value of the input.
  */
 function getValue(htmlQuery: string): any {
-  const element = document.querySelector(htmlQuery)
-  return (element as HTMLInputElement)?.value
+  const element = document.querySelector(htmlQuery);
+  return (element as HTMLInputElement)?.value;
 }
 
 function setValue(htmlQuery: string, value: any): void {
-  let element = document.querySelector(htmlQuery) as HTMLInputElement
-  element.value = value
+  let element = document.querySelector(htmlQuery) as HTMLInputElement;
+  element.value = value;
 }
