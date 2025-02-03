@@ -50,17 +50,17 @@ function redraw(): void {
 
   if (isChecked('#showtext')) {
     let invertsz = isChecked('#invertsz')
-    for (let i = 0; i < getDraft().tablets(); i++) {
+    for (let i = 0; i < getDraft().getTablets(); i++) {
       $('#threadinginstructions').append(
         '<li class="instruction">' +
-          getDraft().describeTablet(i, invertsz) +
-          ' (' +
-          (isChecked('#labelholescw') ? '&#x21BB;' : '&#x21BA;') +
-          ')</li>'
+        getDraft().describeTablet(i, invertsz) +
+        ' (' +
+        (isChecked('#labelholescw') ? '&#x21BB;' : '&#x21BA;') +
+        ')</li>'
       )
       $('#threadinginstructions li').last().append('<ol type="A"></ol>')
       let ol = $('#threadinginstructions li').last().children().last()
-      for (let j = 0; j < getDraft().holes(); j++) {
+      for (let j = 0; j < getDraft().getHoles(); j++) {
         if (isChecked('#labelholescw')) {
           if (
             getValue('#showhruler') &&
@@ -75,18 +75,18 @@ function redraw(): void {
         } else {
           if (
             getValue('#showhruler') &&
-            getValue('#hruler .readout') == j - getDraft().holes()
+            getValue('#hruler .readout') == j - getDraft().getHoles()
           ) {
             ol.append(
               '<li><b>' +
-                getDraft().describeHole(i, getDraft().holes() - j - 1) +
-                ' (selected)</b></li>'
+              getDraft().describeHole(i, getDraft().getHoles() - j - 1) +
+              ' (selected)</b></li>'
             )
           } else {
             ol.append(
               '<li>' +
-                getDraft().describeHole(i, getDraft().holes() - j - 1) +
-                '</li>'
+              getDraft().describeHole(i, getDraft().getHoles() - j - 1) +
+              '</li>'
             )
           }
         }
@@ -94,12 +94,12 @@ function redraw(): void {
     }
 
     $('#turninginstructions').text('')
-    for (let i = 0; i < getDraft().picks(); i++) {
+    for (let i = 0; i < getDraft().getPicks(); i++) {
       if (getValue('#showhruler') && getValue('#hruler .readout') == i + 1) {
         $('#turninginstructions').append(
           '<li class="instruction"><b>' +
-            getDraft().describePick(i) +
-            ' (selected)</b></li>'
+          getDraft().describePick(i) +
+          ' (selected)</b></li>'
         )
       } else {
         $('#turninginstructions').append(
@@ -148,7 +148,7 @@ function redrawControls(): void {
   for (let i = 0; i < 12; i++) {
     $('#BOX' + (i + 1)).css(
       'background-color',
-      getDraft().colour(i).getCSSHexadecimalRGB()
+      getDraft().getColor(i).getCSSHexadecimalRGB()
     )
     if (fgcol != i) {
       $('#BOX' + (i + 1)).removeClass('selected')
@@ -159,7 +159,7 @@ function redrawControls(): void {
 
   if (getFGCol() != -1) {
     initColors(ORIGINAL_COLORS)
-    let color = getDraft().colour(fgcol).getIntegerRGB()
+    let color = getDraft().getColor(fgcol).getIntegerRGB()
     setValue('#REDVAL', color.r)
     setValue('#REDSLIDE', color.r)
     setValue('#GREENVAL', color.g)
@@ -174,7 +174,7 @@ function redrawControls(): void {
     $('#GREENSLIDE').prop('disabled', false)
     $('#BLUESLIDE').prop('disabled', false)
     $('#colourname').text(
-      getColorName(getDraft().colour(fgcol).getCSSHexadecimalRGB()).name
+      getColorName(getDraft().getColor(fgcol).getCSSHexadecimalRGB()).name
     )
   } else {
     setValue('#REDVAL', 0)

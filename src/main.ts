@@ -86,48 +86,48 @@ function updateDraft(): void {
   let tablets = getValue('#colcontrols .readout')
   let addright = isChecked('#addright')
 
-  if (picks < draft.picks()) {
-    draft.removePicks(draft.picks() - picks)
-  } else if (picks > draft.picks()) {
-    draft.addPicks(picks - draft.picks())
+  if (picks < draft.getPicks()) {
+    draft.removePicks(draft.getPicks() - picks)
+  } else if (picks > draft.getPicks()) {
+    draft.addPicks(picks - draft.getPicks())
   }
 
-  if (holes < draft.holes()) {
-    draft.removeHoles(draft.holes() - holes)
-  } else if (holes > draft.holes()) {
-    draft.addHoles(holes - draft.holes())
+  if (holes < draft.getHoles()) {
+    draft.removeHoles(draft.getHoles() - holes)
+  } else if (holes > draft.getHoles()) {
+    draft.addHoles(holes - draft.getHoles())
   }
 
   if (addright) {
-    if (tablets < draft.tablets()) {
-      draft.removeTabletsRight(draft.tablets() - tablets)
-    } else if (tablets > draft.tablets()) {
-      draft.addTabletsRight(tablets - draft.tablets())
+    if (tablets < draft.getTablets()) {
+      draft.removeTabletsRight(draft.getTablets() - tablets)
+    } else if (tablets > draft.getTablets()) {
+      draft.addTabletsRight(tablets - draft.getTablets())
     }
   } else {
-    if (tablets < draft.tablets()) {
-      draft.removeTabletsLeft(draft.tablets() - tablets)
-    } else if (tablets > draft.tablets()) {
-      draft.addTabletsLeft(tablets - draft.tablets())
+    if (tablets < draft.getTablets()) {
+      draft.removeTabletsLeft(draft.getTablets() - tablets)
+    } else if (tablets > draft.getTablets()) {
+      draft.addTabletsLeft(tablets - draft.getTablets())
     }
   }
 
-  if (<number>getValue('#hruler .readout') > draft.picks() + 1) {
-    setValue('#hruler .readout', draft.picks() + 1)
-  } else if (<number>getValue('#hruler .readout') < -draft.holes()) {
-    setValue('#hruler .readout', -draft.holes())
+  if (<number>getValue('#hruler .readout') > draft.getPicks() + 1) {
+    setValue('#hruler .readout', draft.getPicks() + 1)
+  } else if (<number>getValue('#hruler .readout') < -draft.getHoles()) {
+    setValue('#hruler .readout', -draft.getHoles())
   }
 
-  if (<number>getValue('#vruler .readout') > draft.tablets() + 1) {
-    setValue('#vruler .readout', draft.tablets() + 1)
+  if (<number>getValue('#vruler .readout') > draft.getTablets() + 1) {
+    setValue('#vruler .readout', draft.getTablets() + 1)
   }
 
-  if (<number>getValue('#repeatstart .readout') > draft.picks()) {
-    setValue('#repeatstart .readout', draft.picks())
+  if (<number>getValue('#repeatstart .readout') > draft.getPicks()) {
+    setValue('#repeatstart .readout', draft.getPicks())
   }
 
-  if (<number>getValue('#repeatend .readout') > draft.picks()) {
-    setValue('#repeatend .readout', draft.picks())
+  if (<number>getValue('#repeatend .readout') > draft.getPicks()) {
+    setValue('#repeatend .readout', draft.getPicks())
   }
 
   saveToLocal()
@@ -194,7 +194,7 @@ function setupNumberInput(
     ?.addEventListener('change', function () {
       let new_val = validate(
         Math.round(<number>getValue('#' + id + ' .readout') / increment) *
-          increment,
+        increment,
         min_val,
         max_val
       )
@@ -206,7 +206,7 @@ function setupNumberInput(
     ?.addEventListener('click', function () {
       let new_val = validate(
         (Math.round(<number>getValue('#' + id + ' .readout') / increment) - 1) *
-          increment,
+        increment,
         min_val,
         max_val
       )
@@ -218,7 +218,7 @@ function setupNumberInput(
     ?.addEventListener('click', function () {
       let new_val = validate(
         (Math.round(<number>getValue('#' + id + ' .readout') / increment) + 1) *
-          increment,
+        increment,
         min_val,
         max_val,
         true
@@ -231,7 +231,7 @@ function setupNumberInput(
     '#' + id + ' .readout',
     validate(
       Math.round(<number>getValue('#' + id + ' .readout') / increment) *
-        increment,
+      increment,
       min_val,
       max_val
     )
@@ -239,20 +239,20 @@ function setupNumberInput(
 }
 
 function updateRed(red: number): void {
-  const color = draft.colour(fgcol).getIntegerRGB()
-  draft.setColour(fgcol, new RGBColour(red, color.g, color.b))
+  const color = draft.getColor(fgcol).getIntegerRGB()
+  draft.setColor(fgcol, new RGBColour(red, color.g, color.b))
   saveToLocal()
 }
 
 function updateGreen(green: number): void {
-  const color = draft.colour(fgcol).getIntegerRGB()
-  draft.setColour(fgcol, new RGBColour(color.r, green, color.b))
+  const color = draft.getColor(fgcol).getIntegerRGB()
+  draft.setColor(fgcol, new RGBColour(color.r, green, color.b))
   saveToLocal()
 }
 
 function updateBlue(blue: number): void {
-  const color = draft.colour(fgcol).getIntegerRGB()
-  draft.setColour(fgcol, new RGBColour(color.r, color.g, blue))
+  const color = draft.getColor(fgcol).getIntegerRGB()
+  draft.setColor(fgcol, new RGBColour(color.r, color.g, blue))
   saveToLocal()
 }
 
@@ -272,35 +272,35 @@ function updateGrey(grey: number): void {
 function setControlsFromDraft(): void {
   console.log('enter setControlsFromDraft')
 
-  setValue('#mainrowcontrols .readout', draft.picks())
-  setValue('#lowrowcontrols .readout', draft.holes())
-  setValue('#colcontrols .readout', draft.tablets())
+  setValue('#mainrowcontrols .readout', draft.getPicks())
+  setValue('#lowrowcontrols .readout', draft.getHoles())
+  setValue('#colcontrols .readout', draft.getTablets())
   setValue('#draftname', draft.name)
 
-  if (<number>getValue('#hruler .readout') > draft.picks() + 1) {
-    setValue('#hruler .readout', draft.picks() + 1)
-  } else if (<number>getValue('#hruler .readout') < -draft.holes()) {
-    setValue('#hruler .readout', -draft.holes())
+  if (<number>getValue('#hruler .readout') > draft.getPicks() + 1) {
+    setValue('#hruler .readout', draft.getPicks() + 1)
+  } else if (<number>getValue('#hruler .readout') < -draft.getHoles()) {
+    setValue('#hruler .readout', -draft.getHoles())
   }
   view.hRuler(
     isChecked('#showhruler') ? getValue('#hruler .readout') : undefined
   )
 
-  if (<number>getValue('#vruler .readout') > draft.tablets() + 1) {
-    setValue('#vruler .readout', draft.tablets() + 1)
+  if (<number>getValue('#vruler .readout') > draft.getTablets() + 1) {
+    setValue('#vruler .readout', draft.getTablets() + 1)
   }
   view.vRuler(
     isChecked('#showvruler') ? getValue('#vruler .readout') : undefined
   )
 
-  if (<number>getValue('#repeatstart .readout') > draft.picks()) {
-    setValue('#repeatstart .readout', draft.picks())
-    repeat.startPick(draft.picks())
+  if (<number>getValue('#repeatstart .readout') > draft.getPicks()) {
+    setValue('#repeatstart .readout', draft.getPicks())
+    repeat.startPick(draft.getPicks())
   }
 
-  if (<number>getValue('#repeatend .readout') > draft.picks()) {
-    setValue('#repeatend .readout', draft.picks())
-    repeat.endPick(draft.picks())
+  if (<number>getValue('#repeatend .readout') > draft.getPicks()) {
+    setValue('#repeatend .readout', draft.getPicks())
+    repeat.endPick(draft.getPicks())
   }
   console.log('enter setControlsFromDraft')
 }
@@ -399,25 +399,25 @@ function textDescriptionString() {
 
   desc += '\n\nThreading:'
   let invertsz = isChecked('#invertsz')
-  for (let i = 0; i < draft.tablets(); i++) {
+  for (let i = 0; i < draft.getTablets(); i++) {
     desc +=
       '\n * ' +
       draft.describeTablet(i, invertsz) +
       ' (' +
       String.fromCharCode(isChecked('#labelholescw') ? 0x21bb : 0x21ba) +
       ')'
-    for (let j = 0; j < draft.holes(); j++) {
+    for (let j = 0; j < draft.getHoles(); j++) {
       let char = String.fromCharCode('A'.charCodeAt(0) + j)
       desc += '\n    ' + char + ': '
       if (isChecked('#labelholescw')) {
         desc += draft.describeHole(i, j)
       } else {
-        desc += draft.describeHole(i, draft.holes() - j - 1)
+        desc += draft.describeHole(i, draft.getHoles() - j - 1)
       }
     }
   }
   desc += '\n\nTurning:'
-  for (let i = 0; i < draft.picks(); i++) {
+  for (let i = 0; i < draft.getPicks(); i++) {
     desc += '\n ' + (i + 1) + '. ' + draft.describePick(i)
   }
   desc += '\n'
@@ -516,10 +516,10 @@ $(function () {
   setupNumberInput(
     'hruler',
     function () {
-      return -draft.holes()
+      return -draft.getHoles()
     },
     function () {
-      return draft.picks() + 1
+      return draft.getPicks() + 1
     },
     function () {
       view.hRuler(
@@ -535,7 +535,7 @@ $(function () {
     'vruler',
     1,
     function () {
-      return draft.tablets() + 1
+      return draft.getTablets() + 1
     },
     function () {
       view.vRuler(
@@ -638,7 +638,7 @@ $(function () {
   })
   let i
   for (i = 0; i < 12; i++) {
-    ;(function (i) {
+    ; (function (i) {
       $('#BOX' + (i + 1)).click(function () {
         fgcol = i
         saveToLocal()
@@ -671,7 +671,7 @@ $(function () {
       return getValue('#repeatstart .readout')
     },
     function () {
-      return draft.picks()
+      return draft.getPicks()
     },
     function () {
       repeat.endPick(<number>getValue('#repeatend .readout'))
