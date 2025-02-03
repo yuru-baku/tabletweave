@@ -3,10 +3,10 @@ import '../sass_style/style.scss'
 import { saveAs } from 'file-saver'
 import { svg_to_blob, svg_to_img } from './fmt/svg_to_img'
 import { TDDDraft, TDDDraftFromString } from './fmt/tdd'
-import $ from 'jquery'
 import { TDDSVGView } from './fmt/TDDSVGView'
 import { RGBColour } from './fmt/Colour'
 import { json_to_tdd } from './fmt/json_to_tdd'
+import $ from 'jquery'
 
 let draft = new TDDDraft()
 let view = new TDDSVGView()
@@ -281,8 +281,7 @@ function redraw(): void {
   let bot = $('#mainsection').position().top + bbox.height * scale
   let right = $('#mainsection').position().left + bbox.width * scale
 
-  let i
-  for (i = 0; i <= 12; i++) {
+  for (let i = 0; i <= 12; i++) {
     $('#NUM' + i).text(draft.threadCount(i - 1))
   }
 
@@ -297,13 +296,13 @@ function redraw(): void {
 
   if (isChecked('#showtext')) {
     let invertsz = isChecked('#invertsz')
-    for (i = 0; i < draft.tablets(); i++) {
+    for (let i = 0; i < draft.tablets(); i++) {
       $('#threadinginstructions').append(
         '<li class="instruction">' +
-          draft.describeTablet(i, invertsz) +
-          ' (' +
-          (isChecked('#labelholescw') ? '&#x21BB;' : '&#x21BA;') +
-          ')</li>'
+        draft.describeTablet(i, invertsz) +
+        ' (' +
+        (isChecked('#labelholescw') ? '&#x21BB;' : '&#x21BA;') +
+        ')</li>'
       )
       $('#threadinginstructions li').last().append('<ol type="A"></ol>')
       let ol = $('#threadinginstructions li').last().children().last()
@@ -326,8 +325,8 @@ function redraw(): void {
           ) {
             ol.append(
               '<li><b>' +
-                draft.describeHole(i, draft.holes() - j - 1) +
-                ' (selected)</b></li>'
+              draft.describeHole(i, draft.holes() - j - 1) +
+              ' (selected)</b></li>'
             )
           } else {
             ol.append(
@@ -339,12 +338,12 @@ function redraw(): void {
     }
 
     $('#turninginstructions').text('')
-    for (i = 0; i < draft.picks(); i++) {
+    for (let i = 0; i < draft.picks(); i++) {
       if (getValue('#showhruler') && getValue('#hruler .readout') == i + 1) {
         $('#turninginstructions').append(
           '<li class="instruction"><b>' +
-            draft.describePick(i) +
-            ' (selected)</b></li>'
+          draft.describePick(i) +
+          ' (selected)</b></li>'
         )
       } else {
         $('#turninginstructions').append(
@@ -435,7 +434,7 @@ function redrawControls(): void {
   }
 }
 
-function draftClick(e): void {
+function draftClick(e: MouseEvent): void {
   if (!isChecked('#lockdraft')) {
     const pt = this.createSVGPoint()
     pt.x = e.clientX
@@ -496,7 +495,7 @@ function setupNumberInput(
     ?.addEventListener('change', function () {
       let new_val = validate(
         Math.round(<number>getValue('#' + id + ' .readout') / increment) *
-          increment,
+        increment,
         min_val,
         max_val
       )
@@ -508,7 +507,7 @@ function setupNumberInput(
     ?.addEventListener('click', function () {
       let new_val = validate(
         (Math.round(<number>getValue('#' + id + ' .readout') / increment) - 1) *
-          increment,
+        increment,
         min_val,
         max_val
       )
@@ -520,7 +519,7 @@ function setupNumberInput(
     ?.addEventListener('click', function () {
       let new_val = validate(
         (Math.round(<number>getValue('#' + id + ' .readout') / increment) + 1) *
-          increment,
+        increment,
         min_val,
         max_val,
         true
@@ -533,38 +532,38 @@ function setupNumberInput(
     '#' + id + ' .readout',
     validate(
       Math.round(<number>getValue('#' + id + ' .readout') / increment) *
-        increment,
+      increment,
       min_val,
       max_val
     )
   )
 }
 
-function updateRed(r): void {
-  let c = draft.colour(fgcol).getIntegerRGB()
-  draft.setColour(fgcol, new RGBColour(r, c.g, c.b))
+function updateRed(red: number): void {
+  const color = draft.colour(fgcol).getIntegerRGB()
+  draft.setColour(fgcol, new RGBColour(red, color.g, color.b))
   saveToLocal()
 }
 
-function updateGreen(g): void {
-  let c = draft.colour(fgcol).getIntegerRGB()
-  draft.setColour(fgcol, new RGBColour(c.r, g, c.b))
+function updateGreen(green: number): void {
+  const color = draft.colour(fgcol).getIntegerRGB()
+  draft.setColour(fgcol, new RGBColour(color.r, green, color.b))
   saveToLocal()
 }
 
-function updateBlue(b): void {
-  let c = draft.colour(fgcol).getIntegerRGB()
-  draft.setColour(fgcol, new RGBColour(c.r, c.g, b))
+function updateBlue(blue: number): void {
+  const color = draft.colour(fgcol).getIntegerRGB()
+  draft.setColour(fgcol, new RGBColour(color.r, color.g, blue))
   saveToLocal()
 }
 
-function updateGrey(g): void {
-  if (g > 0xff) g = 0xff
-  if (g < 0) g = 0
-  view.greySaturation(0x100 - g)
-  setValue('#GREYSLIDER', g)
-  setValue('#GREYVAL', g)
-  saveToLocal()
+function updateGrey(grey: number): void {
+  if (grey > 0xff) { grey = 0xff; }
+  if (grey < 0) { grey = 0; }
+  view.greySaturation(0x100 - grey);
+  setValue('#GREYSLIDER', grey);
+  setValue('#GREYVAL', grey);
+  saveToLocal();
 }
 
 function setControlsFromDraft(): void {
@@ -573,88 +572,88 @@ function setControlsFromDraft(): void {
   setValue('#colcontrols .readout', draft.tablets())
   setValue('#draftname .readout', draft.name)
 
-  if (<number>getValue('#hruler .readout') > draft.picks() + 1) {
-    setValue('#hruler .readout', draft.picks() + 1)
+  if (<number>getValue('#hruler .readout') > (draft.picks() + 1)) {
+    setValue('#hruler .readout', draft.picks() + 1);
   } else if (<number>getValue('#hruler .readout') < -draft.holes()) {
-    setValue('#hruler .readout', -draft.holes())
+    setValue('#hruler .readout', -draft.holes());
   }
   view.hRuler(
     isChecked('#showhruler') ? getValue('#hruler .readout') : undefined
-  )
+  );
 
   if (<number>getValue('#vruler .readout') > draft.tablets() + 1) {
-    setValue('#vruler .readout', draft.tablets() + 1)
+    setValue('#vruler .readout', draft.tablets() + 1);
   }
   view.vRuler(
     isChecked('#showvruler') ? getValue('#vruler .readout') : undefined
-  )
+  );
 
   if (<number>getValue('#repeatstart .readout') > draft.picks()) {
-    setValue('#repeatstart .readout', draft.picks())
-    repeat.startPick(draft.picks())
+    setValue('#repeatstart .readout', draft.picks());
+    repeat.startPick(draft.picks());
   }
 
   if (<number>getValue('#repeatend .readout') > draft.picks()) {
-    setValue('#repeatend .readout', draft.picks())
-    repeat.endPick(draft.picks())
+    setValue('#repeatend .readout', draft.picks());
+    repeat.endPick(draft.picks());
   }
 }
 
 function loadFile() {
-  let files = ($('#fileio #load')[0] as HTMLInputElement).files
+  let files = ($('#fileio #load')[0] as HTMLInputElement).files;
   if (files.length > 0) {
-    let reader = new FileReader()
+    let reader = new FileReader();
 
     reader.onload = (function (is_tdd) {
-      return function (e) {
+      return function (event) {
         try {
-          let data = e.target.result
+          let data = event.target.result;
 
           if (!is_tdd && (<string>data).substring(0, 5) === '# tdd') {
-            is_tdd = true
+            is_tdd = true;
           }
 
           if (is_tdd) {
-            draft = TDDDraftFromString(<string>data)
+            draft = TDDDraftFromString(<string>data);
           } else {
-            draft = json_to_tdd(JSON.parse(<string>data))
+            draft = json_to_tdd(JSON.parse(<string>data));
           }
         } catch (err) {
-          alert('File is corrupted and could not be loaded.')
-          return
+          alert('File is corrupted and could not be loaded.');
+          return;
         }
 
-        saveToLocal()
-        setControlsFromDraft()
-        redrawControls()
-        redraw()
+        saveToLocal();
+        setControlsFromDraft();
+        redrawControls();
+        redraw();
       }
-    })(/^.*\.tdd(\.txt)?$/.test(files[0].name))
+    })(/^.*\.tdd(\.txt)?$/.test(files[0].name));
 
-    reader.readAsText(files[0])
+    reader.readAsText(files[0]);
   }
 }
 
 function saveFile() {
   try {
-    let filename = ''
+    let filename = '';
     if (draft.name != '') {
-      filename = draft.name + '.tdd'
+      filename = draft.name + '.tdd';
     } else {
-      filename = 'draft.tdd'
+      filename = 'draft.tdd';
     }
     let blob = new Blob([draft.toString()], {
       type: 'text/plain;charset=utf-8',
-    })
-    saveAs(blob, filename)
+    });
+    saveAs(blob, filename);
   } catch (err) {
-    alert('Could not save file, something went wrong')
-    return
+    alert('Could not save file, something went wrong');
+    return;
   }
 }
 
 function reset() {
-  draft = new TDDDraft()
+  draft = new TDDDraft();
 
   setValue('#scalecontrols .readout', 0)
   $('#lockdraft').prop('checked', false)
@@ -931,7 +930,7 @@ $(function () {
   })
   let i
   for (i = 0; i < 12; i++) {
-    ;(function (i) {
+    ; (function (i) {
       $('#BOX' + (i + 1)).click(function () {
         fgcol = i
         saveToLocal()
