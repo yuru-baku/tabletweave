@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useCookies } from '@vueuse/integrations/useCookies'
-import { onUnmounted, ref } from 'vue'
+import { ref } from 'vue'
 
 const cookies = useCookies(['username'])
 let name = ref(cookies.get('username') || '')
@@ -22,3 +22,7 @@ function joinRoom() {
     </form>
   </main>
 </template>
+
+<style lang="scss">
+@import '@/styles/style.scss';
+</style>

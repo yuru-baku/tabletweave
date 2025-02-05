@@ -1,4 +1,4 @@
-import { control_vals, draft, setDraft, setFGCol } from './main'
+import { control_vals, draft, setDraft, setFGCol } from './logic'
 import { TDDDraftFromString } from './tdd/tdd'
 import { setChecked, setValue } from './util'
 export { saveToLocal, loadFromLocal }
