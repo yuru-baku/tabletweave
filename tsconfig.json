@@ -1,20 +1,14 @@
 {
+  "files": [],
   "compilerOptions": {
-    "baseUrl": "./",
-    "rootDir": "./src",
-    "outDir": "./dist",
-    "esModuleInterop": true,
-    "removeComments": true,
-    "preserveConstEnums": true,
-    "target": "ES2020",
-    "useDefineForClassFields": true,
-    "module": "NodeNext",
-    "sourceMap": true,
-    "moduleResolution": "nodenext",
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
-    "paths": {
-      "@lib/*": ["./lib/*"]
-    }
+    "allowJs": true
   },
-  "include": ["src"]
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    },
+    {
+      "path": "./tsconfig.app.json"
+    }
+  ]
 }

@@ -1,5 +1,5 @@
 // The main script for the draft designer
-import '../sass_style/style.scss'
+import './styles/style.scss'
 import { saveAs } from 'file-saver'
 import { svg_to_blob, svg_to_img } from './fmt/svg_to_img'
 import { TDDDraft, TDDDraftFromString } from './tdd/tdd'
