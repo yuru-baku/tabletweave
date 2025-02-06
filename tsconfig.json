@@ -1,5 +1,6 @@
 {
   "files": [],
+  "noImplicitAny": false,
   "compilerOptions": {
     "allowJs": true
   },

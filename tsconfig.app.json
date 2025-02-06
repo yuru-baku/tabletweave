@@ -2,6 +2,8 @@
   "extends": "@vue/tsconfig/tsconfig.dom.json",
   "include": ["env.d.ts", "src/**/*", "src/**/*.vue", "src/**/*.ts"],
   "exclude": ["src/**/__tests__/*"],
+  "semi": true,
+  "noImplicitAny": false,
   "compilerOptions": {
     "rootDirs": ["src", "tests"],
     "composite": true,

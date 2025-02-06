@@ -10,13 +10,15 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
-  plugins: [vue({
-    template: {
-      compilerOptions: {
-        isCustomElement: (tag) => tag.includes('a-')
+  plugins: [
+    vue({
+      template: {
+        compilerOptions: {
+          isCustomElement: (tag) => tag.includes('a-'),
+        },
       },
-    },
-  }),],
+    }),
+  ],
   server: {
     watch: {
       usePolling: true,
