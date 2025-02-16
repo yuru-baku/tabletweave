@@ -12,3 +12,26 @@ import BaseFooter from '@/components/BaseFooter.vue';
     <BaseFooter> </BaseFooter>
   </div>
 </template>
+
+<style lang="scss">
+@use '@/styles/util';
+
+.BaseLayoutContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  background-color: util.$background-color;
+  color: util.$text-color;
+}
+
+.BaseMain {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  section {
+    flex-direction: column;
+    width: fit-content;
+    gap: 1em;
+  }
+}
+</style>

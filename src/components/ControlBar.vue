@@ -298,7 +298,7 @@ import PaletControl from './PaletControl.vue';
     </section>
 
     <section id="repeatsection">
-      <div id="repeatcanvas" class="draftcanvas"></div>
+      <div id="repeatcanvas" class="repeatcanvas"></div>
     </section>
 
     <section id="textinstructions">
@@ -313,5 +313,74 @@ import PaletControl from './PaletControl.vue';
 </template>
 
 <style lang="scss">
-@use '@/styles/style.scss';
+@use '@/styles/util';
+
+.controlbar {
+  border: util.$border;
+  border-radius: util.$border-radius;
+  overflow-y: scroll;
+  background-color: util.$control_background;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+
+  .ControlPanel {
+    display: flex;
+    flex-direction: column;
+    background-color: util.$control_background;
+
+    .active:after {
+      content: '\2796'; /* Unicode character for "minus" sign (-) */
+    }
+
+    .accordion {
+      background-color: hsl(0, 0%, 90%);
+      font-variant: small-caps;
+      font-size: larger;
+      color: black;
+      cursor: pointer;
+      padding: 18px;
+      text-align: left;
+      transition: 0.4s;
+
+      /* Overwrite button styling*/
+      border: none;
+      outline: none;
+      width: 100%;
+      &:hover {
+        background-color: util.$active_highlight;
+        transition: 0.2s;
+      }
+
+      //switch + with - when controls are extendet
+      &::after {
+        content: '\02795'; /* Unicode character for "plus" sign (+) */
+        font-size: 13px;
+        color: #777;
+        float: right;
+        margin-left: 5px;
+      }
+    }
+
+    .panel {
+      margin: 1rem 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5em;
+
+      .panelitem {
+        display: flex;
+        flex-direction: row;
+
+        .panelitemlabel {
+          flex: 2;
+        }
+
+        .panelitemvalue {
+          flex: 3;
+        }
+      }
+    }
+  }
+}
 </style>

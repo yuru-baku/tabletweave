@@ -48,6 +48,9 @@ const props = defineProps({});
   border: 1px solid black;
   border-radius: util.$border-radius;
 }
+.selected {
+  border: 2px solid util.$text-border-color;
+}
 
 .colornum {
   text-align: center;

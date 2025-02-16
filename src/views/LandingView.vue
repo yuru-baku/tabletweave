@@ -19,5 +19,5 @@ const cookies = useCookies(['username']);
 </template>
 
 <style lang="scss">
-@import '@/styles/style.scss';
+@use '@/styles/style.scss';
 </style>

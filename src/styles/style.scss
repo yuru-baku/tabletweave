@@ -1,0 +1,51 @@
+@use 'util';
+
+h1,
+h4 {
+  text-align: center;
+  font-variant: small-caps;
+}
+
+.numberInput {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.draftcanvas,
+.repeatcanvas {
+  border: util.$border;
+  border-radius: util.$border-radius;
+}
+
+#messagepopup {
+  background-color: #ffffff;
+  border: 1px solid #999999;
+  cursor: default;
+  display: none;
+  margin-top: 15px;
+  position: absolute;
+  text-align: left;
+  width: 80%;
+  z-index: 50;
+  padding: 25px 25px 20px;
+}
+
+#previewcontainer {
+  padding: 5px 5px 5px;
+  border: 1px solid #999999;
+}
+
+label[for='labelholescw'],
+label[for='lockdraft'],
+label[for='addright'] {
+  line-height: 60px;
+}
+
+#GREYSLIDER {
+  width: 50%;
+}
+
+.selectionlist {
+  display: flex;
+  flex-direction: column;
+}
