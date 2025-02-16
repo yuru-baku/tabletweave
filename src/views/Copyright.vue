@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { useRouter, type Router } from 'vue-router';
+import BaseLayout from '@/components/BaseLayout.vue';
+
 const router = useRouter();
 </script>
 
 <template>
-  <main class="vertical">
+  <BaseLayout>
     <h1 data-i18n="copyright_notice.title"></h1>
 
     <div id="explanation">
@@ -42,5 +44,5 @@ const router = useRouter();
         </li>
       </ul>
     </div>
-  </main>
+  </BaseLayout>
 </template>
