@@ -1,13 +1,27 @@
-import { defineConfig } from 'vite';
-import path from 'path';
-import sass from 'vite-plugin-sass';
+import { defineConfig } from 'vite'
+import sass from 'vite-plugin-sass'
+import vue from '@vitejs/plugin-vue'
+import { fileURLToPath, URL } from 'node:url'
 
 export default defineConfig({
   root: './',
   resolve: {
     alias: {
-      '@lib': path.resolve(__dirname, 'lib'),
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
-  plugins: [sass()],
-});
+  plugins: [
+    vue({
+      template: {
+        compilerOptions: {
+          isCustomElement: (tag) => tag.includes('a-'),
+        },
+      },
+    }),
+  ],
+  server: {
+    watch: {
+      usePolling: true,
+    },
+  },
+})

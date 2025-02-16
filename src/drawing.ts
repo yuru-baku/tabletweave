@@ -1,7 +1,7 @@
-import { getColorName, initColors, ORIGINAL_COLORS } from 'ntc-ts';
-import { draft, getDraft, getFGCol, repeat, view } from './main';
-import { getValue, isChecked, setValue } from './util';
-import $ from 'jquery';
+import { getColorName, initColors, ORIGINAL_COLORS } from 'ntc-ts'
+import { draft, getDraft, getFGCol, repeat, view } from './logic'
+import { getValue, isChecked, setValue } from './util'
+import $ from 'jquery'
 
 export { redraw, redrawControls };
 
@@ -53,10 +53,10 @@ function redraw(): void {
     for (let i = 0; i < getDraft().getTablets(); i++) {
       $('#threadinginstructions').append(
         '<li class="instruction">' +
-          getDraft().describeTablet(i, invertsz) +
-          ' (' +
-          (isChecked('#labelholescw') ? '&#x21BB;' : '&#x21BA;') +
-          ')</li>'
+        getDraft().describeTablet(i, invertsz) +
+        ' (' +
+        (isChecked('#labelholescw') ? '&#x21BB;' : '&#x21BA;') +
+        ')</li>'
       );
       $('#threadinginstructions li').last().append('<ol type="A"></ol>');
       let ol = $('#threadinginstructions li').last().children().last();
@@ -79,14 +79,14 @@ function redraw(): void {
           ) {
             ol.append(
               '<li><b>' +
-                getDraft().describeHole(i, getDraft().getHoles() - j - 1) +
-                ' (selected)</b></li>'
+              getDraft().describeHole(i, getDraft().getHoles() - j - 1) +
+              ' (selected)</b></li>'
             );
           } else {
             ol.append(
               '<li>' +
-                getDraft().describeHole(i, getDraft().getHoles() - j - 1) +
-                '</li>'
+              getDraft().describeHole(i, getDraft().getHoles() - j - 1) +
+              '</li>'
             );
           }
         }
@@ -98,8 +98,8 @@ function redraw(): void {
       if (getValue('#showhruler') && getValue('#hruler .readout') == i + 1) {
         $('#turninginstructions').append(
           '<li class="instruction"><b>' +
-            getDraft().describePick(i) +
-            ' (selected)</b></li>'
+          getDraft().describePick(i) +
+          ' (selected)</b></li>'
         );
       } else {
         $('#turninginstructions').append(
