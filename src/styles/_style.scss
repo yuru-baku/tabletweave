@@ -1,17 +1,11 @@
-$background-color: hsl(42, 2%, 100%);
-$text-color: black;
-$text-background-color: white;
-$text-border-color: black;
-$control_background: hsl(0, 0%, 95%);
-$active_highlight: hsl(0, 0%, 50%);
-$border: 1px solid black;
-$border-radius: 5px;
+@use 'util';
+
 .BaseLayoutContainer {
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  background-color: $background-color;
-  color: $text-color;
+  background-color: util.$background-color;
+  color: util.$text-color;
 }
 
 h1,
@@ -41,23 +35,23 @@ h4 {
   flex-direction: column;
   gap: 1rem;
   padding: 0.5rem;
-  border: $border;
-  border-radius: $border-radius;
+  border: util.$border;
+  border-radius: util.$border-radius;
 }
 
 .controlbar {
-  border: $border;
-  border-radius: $border-radius;
+  border: util.$border;
+  border-radius: util.$border-radius;
   overflow-y: scroll;
-  background-color: $control_background;
+  background-color: util.$control_background;
   display: flex;
   flex-direction: column;
   gap: 1em;
 
-  .controlpanel {
+  .ControlPanel {
     display: flex;
     flex-direction: column;
-    background-color: $control_background;
+    background-color: util.$control_background;
 
     .active:after {
       content: '\2796'; /* Unicode character for "minus" sign (-) */
@@ -78,7 +72,7 @@ h4 {
       outline: none;
       width: 100%;
       &:hover {
-        background-color: $active_highlight;
+        background-color: util.$active_highlight;
         transition: 0.2s;
       }
 
@@ -121,29 +115,18 @@ h4 {
 
 .draftcanvas,
 .repeatcanvas {
-  border: $border;
-  border-radius: $border-radius;
-}
-
-.colorbox {
-  width: 2em;
-  height: 2em;
-  border: 2px solid transparent;
-  border-radius: $border-radius;
-}
-
-.colornum {
-  text-align: center;
+  border: util.$border;
+  border-radius: util.$border-radius;
 }
 
 .selected {
-  border: 2px solid $text-border-color;
+  border: 2px solid util.$text-border-color;
 }
 
 .copyright {
-  background-color: $control_background;
-  border: $border;
-  border-radius: $border-radius;
+  background-color: util.$control_background;
+  border: util.$border;
+  border-radius: util.$border-radius;
 
   display: block;
   width: 100%;
@@ -210,8 +193,8 @@ label[for='addright'] {
   position: absolute;
   left: 400px;
   top: 200px;
-  background-color: $text-background-color;
-  border: $border;
-  border-radius: $border-radius;
+  background-color: util.$text-background-color;
+  border: util.$border;
+  border-radius: util.$border-radius;
   padding: 5px 5px 5px;
 }

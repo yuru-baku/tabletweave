@@ -7,19 +7,19 @@ import router from './router';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { fas } from '@fortawesome/free-solid-svg-icons';
-library.add(fas); // 
+library.add(fas); //
 
 /* setup components*/
 import BaseLayout from '@/components/BaseLayout.vue';
 import ControlBar from '@/components/ControlBar.vue';
-import Colorbox from '@/components/Colorbox.vue';
+import ColorPalete from '@/components/ColorPalate.vue';
 import ControlPanel from '@/components/ControlPanel.vue';
 
 const app = createApp(App)
   .component('font-awesome-icon', FontAwesomeIcon)
   .component('BaseLayout', BaseLayout)
   .component('ControlBar', ControlBar)
-  .component('Colorbox', Colorbox)
+  .component('ColorPalete', ColorPalete)
   .component('ControlPanel', ControlPanel)
   .use(router)
   .mount('#app');
