@@ -1,12 +1,6 @@
 <script setup lang="ts">
-import { useCookies } from '@vueuse/integrations/useCookies';
-import { onUnmounted, ref } from 'vue';
-
-const cookies = useCookies(['username']);
-let name = ref(cookies.get('username') || '');
-function joinRoom() {
-  cookies.set('username', name.value);
-}
+import { useRouter, type Router } from 'vue-router';
+const router = useRouter();
 </script>
 
 <template>

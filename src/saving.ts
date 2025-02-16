@@ -1,8 +1,8 @@
-import { control_vals, draft, setDraft, setFGCol } from './logic'
-import { TDDDraftFromString } from './tdd/tdd'
-import { setChecked, setValue } from './util'
-export { saveToLocal, loadFromLocal }
-import $ from 'jquery'
+import { control_vals, draft, setDraft, setFGCol } from './logic';
+import { TDDDraftFromString } from './tdd/tdd';
+import { setChecked, setValue } from './util';
+export { saveToLocal, loadFromLocal };
+import $ from 'jquery';
 
 function saveToLocal(): void {
   localStorage.setItem('tdd-controls', JSON.stringify(control_vals()));

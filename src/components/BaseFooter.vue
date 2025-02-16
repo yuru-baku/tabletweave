@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <footer>
+  <footer class="BaseFooter">
     <div id="instructions">
       <span class="instructionlink">
         <a
@@ -10,6 +10,8 @@
           Instructions
         </a>
       </span>
+    </div>
+    <div id="usingRepeats">
       <span class="instructionlink">
         <a
           href="http://www.tabletweavingintheoryandpractice.co.uk/2021/01/using-new-pattern-repeat-tool-on-tdd.html"
