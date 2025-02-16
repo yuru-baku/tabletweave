@@ -25,9 +25,7 @@ import BaseFooter from '@/components/BaseFooter.vue';
 }
 
 .BaseMain {
-  display: flex;
-  flex-direction: row;
-  gap: 1rem;
+  margin: 1rem;
   section {
     flex-direction: column;
     width: fit-content;

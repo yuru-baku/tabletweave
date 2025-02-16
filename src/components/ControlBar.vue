@@ -6,9 +6,6 @@ import PaletControl from './PaletControl.vue';
 <template>
   <div>
     <section class="controlbar">
-      <ControlPanel id="Wooodois" title="Woodois 2"
-        >Wooodois something
-      </ControlPanel>
       <ControlPanel id="draft_name" title="Draft Name">
         <span class="panelitem">
           <label class="panelitemlabel" for="draftname">Draft Name:</label>

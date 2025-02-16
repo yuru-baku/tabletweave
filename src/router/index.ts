@@ -17,7 +17,7 @@ const router = createRouter({
       component: Copyright,
     },
     {
-      path: '/hotwo',
+      path: '/howto',
       name: 'hotwo',
       component: HowTo,
     },

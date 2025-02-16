@@ -45,8 +45,7 @@
 @use '@/styles/util';
 
 .BaseFooter {
-  flex-direction: column;
-  gap: 1rem;
+  margin: 1rem;
   padding: 0.5rem;
   border: util.$border;
   border-radius: util.$border-radius;
