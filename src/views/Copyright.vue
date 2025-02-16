@@ -7,8 +7,6 @@ const router = useRouter();
 
 <template>
   <BaseLayout>
-    <h1 data-i18n="copyright_notice.title"></h1>
-
     <div id="explanation">
       <ul>
         <li>
@@ -29,17 +27,17 @@ const router = useRouter();
         <li>
           We ASK (but do not require) that you include a statement that the
           drafts were designed using TDD and a link to TDD
-          <a href="http://bazzalisk.org/tabletweave/">
-            http://bazzalisk.org/tabletweave/
+          <a href="https://bazzalisk.org/tabletweave/">
+            https://bazzalisk.org/tabletweave/
           </a>
-          >so that others might find it more easily/s.
+          so that others might find it more easily.
         </li>
         <li>
           If you wish to support the work we do then links to Catherine's books
           can be found here:
           <a
-            href="http://www.tabletweavingintheoryandpractice.co.uk/p/books-ive-written-about-tablet-weaving.html">
-            http://www.tabletweavingintheoryandpractice.co.uk/p/books-ive-written-about-tablet-weaving.html
+            href="https://www.tabletweavingintheoryandpractice.co.uk/p/books-ive-written-about-tablet-weaving.html">
+            https://www.tabletweavingintheoryandpractice.co.uk/p/books-ive-written-about-tablet-weaving.html
           </a>
         </li>
       </ul>
